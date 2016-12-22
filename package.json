@@ -1,0 +1,31 @@
+{
+  "name": "guit",
+  "description": "GUI testing tool",
+  "keywords": [
+    "tool",
+    "test",
+    "gui"
+  ],
+  "main": "index.js",
+  "version": "1.0.0-dev",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shcoder-ru/guit.git"
+  },
+  "author": "Vasiliy Shilov (shcoder.ru@ya.ru)",
+  "dependencies": {
+    "assert": "^1.4.1",
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2017": "^6.16.0",
+    "phantom": "^3.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "scripts": {
+    "start": "babel-node index.js --presets es2015,es2017",
+    "watch": "nodemon index.js --exec babel-node --presets es2015,es2017"
+  }
+}
