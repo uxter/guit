@@ -1,20 +1,13 @@
-import phantom from 'phantom';
+import GUIT from './lib/guit';
+
+const g = new GUIT({
+    width: 320,
+    height: 480,
+    checkTimeout: 100,
+    doneTimeout: 5000
+});
 
 (async function() {
-
-    const instance = await phantom.create();
-    const page = await instance.createPage();
-
-    await page.on('onResourceRequested', requestData => {
-        console.info('Requesting', requestData.url)
-    });
-
-    const status = await page.open('http://localhost/');
-    console.log(status);
-
-    const content = await page.property('content');
-    console.log(content);
-
-    await instance.exit();
-
-}());
+    await g.open('http://localhost/');
+    await g.render('test.png');
+})();
