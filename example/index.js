@@ -1,50 +1,58 @@
-// import { runServer } from './server';
-import guit from '../index';
+import * as guit from '../index';
 
-// runServer(3000).then(close => setTimeout(close, 5000)).catch((err) => err);
+describe('Top Level suite', function() {
 
-describe('Test 1', function() {
-    it('Should be 1', async function() {
-        expect(true).toBeFalsy();
-        await new Promise((resolve, reject) => setTimeout(resolve, 100));
-        expect(true).toBeTruthy();
+    it('spec', function() {
+
+        expect(1).toBe(1);
     });
-    it('Should be 2', async function() {
-        expect(true).toBeTruthy();
-        await new Promise((resolve, reject) => setTimeout(resolve, 400));
-        expect(true).toBeFalsy();
+
+    describe('Nested suite', function() {
+
+        it('nested spec', function() {
+
+            expect(true).toBe(true);
+        });
+
     });
+
 });
 
-describe('Test 2', function() {
-    it('Should be 3', async function() {
-        expect(true).toBeTruthy();
-        await new Promise((resolve, reject) => setTimeout(resolve, 100));
-        expect(true).toBeTruthy();
+describe('Top Level suite', function() {
+
+    it('spec', function() {
+
+        expect(2).toBe(1);
     });
-    it('Should be 4', async function() {
-        expect(true).toBeFalsy();
-        expect(true).toBeTruthy();
+
+    describe('Nested suite', function() {
+
+        it('nested spec', async function() {
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    expect(false).toBe(true);
+                    resolve();
+                }, 3000);
+            });
+        });
+
     });
+
+    describe('Nested suite 2', function() {
+
+        it('nested spec 2', async function() {
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    expect(false).toBe(true);
+                    resolve();
+                }, 2000);
+            });
+        });
+
+    });
+
 });
 
-guit.run(report => console.log(report));
-
-
-/*
-const g = new GUIT({
-    width: 1280,
-    height: 1024,
-    checkTimeout: 100,
-    doneTimeout: 5000
+guit.runSpecs().catch(e => {
+    console.log(e);
 });
-
-(async function() {
-    await g.open('http://localhost/');
-    // await g.render('example-screenshot.png');
-    let calculatedSnapshot = await g.getSnapshot();
-    // await g.saveSnapshot('example-snapshot.json', snapshot);
-    let savedSnapshot = await g.loadSnapshot('example-snapshot.json');
-    assert.deepEqual(calculatedSnapshot, savedSnapshot);
-})();
-*/
