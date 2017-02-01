@@ -18,16 +18,16 @@ describe('Top Level suite', function() {
 
 });
 
-describe('Top Level suite', function() {
+describe('Top Level suite 2', function() {
 
-    it('spec', function() {
+    it('spec 2', function() {
 
         expect(2).toBe(1);
     });
 
-    describe('Nested suite', function() {
+    describe('Nested suite 2', function() {
 
-        it('nested spec', async function() {
+        it('nested spec 2', async function() {
             await new Promise(resolve => {
                 setTimeout(() => {
                     expect(false).toBe(true);
@@ -38,12 +38,12 @@ describe('Top Level suite', function() {
 
     });
 
-    describe('Nested suite 2', function() {
+    describe('Nested suite 3', function() {
 
-        it('nested spec 2', async function() {
+        it('nested spec 3', async function() {
             await new Promise(resolve => {
                 setTimeout(() => {
-                    expect(false).toBe(true);
+                    expect(true).toBe(false);
                     resolve();
                 }, 2000);
             });
@@ -53,6 +53,14 @@ describe('Top Level suite', function() {
 
 });
 
-guit.runSpecs().catch(e => {
-    console.log(e);
+guit.addReporter(function() {
+    let obj = {};
+    return new Proxy(obj, {
+        get: function(target, name) {
+            return function(data = {}) {
+                console.log(name, data.title, data.error && '>>> ' + data.error.message);
+            }
+        }
+    });
 });
+guit.runSpecs();
