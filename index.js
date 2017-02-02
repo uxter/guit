@@ -2,7 +2,6 @@ import Suite from './lib/spec/suite';
 import Spec from './lib/spec/spec';
 import { beforeAll, beforeEach, afterEach, afterAll } from './lib/spec/helpers';
 import { addReporter } from './lib/report';
-import TerminalReporter from './lib/reporter/terminal-reporter';
 import expect from './lib/expect';
 import root from './lib/root';
 
@@ -14,12 +13,12 @@ global.afterEach = afterEach;
 global.afterAll = afterAll;
 global.expect = expect;
 
-addReporter(TerminalReporter);
-
-export function configure(config = {}) { root.config = config; }
+export function configure(config = {}) { Object.assign(root.config, config); }
+export { default as TerminalReporter } from './lib/reporter/terminal-reporter';
+export { default as JunitReporter } from './lib/reporter/junit-reporter';
 export { runSpecs } from './lib/runner';
 export { addReporter };
 
 export function make(config) {
-    // @TODO handle JSON
+    // @TODO create specs from JSON
 }
