@@ -1,66 +1,60 @@
-import * as guit from '../index';
+import { runSpecs } from '../index';
 
-describe('Top Level suite', function() {
+describe('Top Level suite 1:', function() {
 
-    it('spec', function() {
-
+    it('spec 1', function() {
         expect(1).toBe(1);
     });
 
-    describe('Nested suite', function() {
-
-        it('nested spec', function() {
-
+    describe('Nested suite 1:', function() {
+        it('nested spec 1', function() {
             expect(true).toBe(true);
         });
-
     });
 
 });
 
-describe('Top Level suite 2', function() {
+describe('Top Level suite 2:', function() {
 
     it('spec 2', function() {
-
-        expect(2).toBe(1);
+        expect(2).toBe(2);
     });
 
-    describe('Nested suite 2', function() {
-
+    describe('Nested suite 2:', function() {
         it('nested spec 2', async function() {
             await new Promise(resolve => {
                 setTimeout(() => {
-                    expect(false).toBe(true);
+                    expect(false).toBe(false);
                     resolve();
-                }, 3000);
+                }, 1000);
             });
         });
+        it('spec 3', function() {
+            expect(2).toBe(2);
+        });
+    });
 
+    it('spec 4', function() {
+        expect(2).toBe(2);
+    });
+    it('spec 5', function() {
+        expect(2).toBe(2);
+    });
+    it('spec 6', function() {
+        expect(2).toBe(2);
     });
 
     describe('Nested suite 3', function() {
-
-        it('nested spec 3', async function() {
+        it('nested spec 7', async function() {
             await new Promise(resolve => {
                 setTimeout(() => {
-                    expect(true).toBe(false);
+                    expect(true).toBe(true);
                     resolve();
                 }, 2000);
             });
         });
-
     });
 
 });
 
-guit.addReporter(function() {
-    let obj = {};
-    return new Proxy(obj, {
-        get: function(target, name) {
-            return function(data = {}) {
-                console.log(name, data.title, data.error && '>>> ' + data.error.message);
-            }
-        }
-    });
-});
-guit.runSpecs();
+runSpecs();
