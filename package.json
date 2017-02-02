@@ -6,7 +6,7 @@
     "test",
     "gui"
   ],
-  "main": "index.js",
+  "main": "lib/guit.js",
   "version": "1.0.0-dev",
   "license": "ISC",
   "repository": {
@@ -29,7 +29,6 @@
     "nodemon": "^1.11.0"
   },
   "scripts": {
-    "start": "babel-node index.js --presets es2015,es2017 --plugins transform-object-rest-spread",
-    "watch": "nodemon example/index.js --exec babel-node --presets es2015,es2017 --plugins transform-object-rest-spread"
+    "prepublish": "babel src --out-dir lib --presets es2015,es2017 --plugins transform-object-rest-spread"
   }
 }

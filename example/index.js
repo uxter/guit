@@ -4,7 +4,7 @@ import {
     addReporter,
     TerminalReporter,
     JunitReporter
-} from '../index';
+} from '../src/guit';
 
 describe('Top Level suite 1:', function() {
 
