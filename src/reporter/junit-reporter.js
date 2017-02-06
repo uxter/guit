@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import builder from 'xmlbuilder';
 
 export default class JunitReporter {
@@ -89,7 +90,7 @@ export default class JunitReporter {
         this.testSuites['@time'] = (Date.now() - this.startTime) / 1000;
         let xml = builder.create('testsuites', { version: '1.0', encoding: 'UTF-8' })
             .ele(this.testSuites).end({ pretty: true});
-        fs.writeFileSync(this.filename, xml);
+        fs.writeFileSync(path.join(process.cwd(), this.filename), xml);
     }
 
 }

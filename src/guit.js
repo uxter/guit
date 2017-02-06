@@ -18,6 +18,7 @@ export { default as TerminalReporter } from './reporter/terminal-reporter';
 export { default as JunitReporter } from './reporter/junit-reporter';
 export { runSpecs } from './runner';
 export { addReporter };
+export { default as importSpecs } from './import';
 
 export function make(config) {
     // @TODO create specs from JSON
