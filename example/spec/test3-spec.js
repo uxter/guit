@@ -5,13 +5,13 @@ describe('Top Level suite 3:', function() {
     });
 
     it('spec 4', function() {
-        expect(2).toBe(2);
+        expect({}).toEqual({});
     });
     it('spec 5', function() {
-        expect(2).toBe(1);
+        expect([]).toEqual([]);
     });
     it('spec 6', function() {
-        expect(2).toBe(2);
+        expect(true).toBe(true);
     });
 
 });

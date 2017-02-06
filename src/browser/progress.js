@@ -4,13 +4,14 @@ class Progress {
         this.__onDone = done;
         this.__requests = 0;
         this.__timer = 0;
+        this.__doneTimer = 0;
         this.page = page;
         this.checkTimeout = checkTimeout;
         this.onRequested = this.onResourceRequested.bind(this);
         this.onReceived = this.onResourceReceived.bind(this);
         this.onError = this.onResourceError.bind(this);
         this.bindEvents();
-        setTimeout(this.done.bind(this), doneTimeout);
+        this.__doneTimer = setTimeout(() => this.done(), doneTimeout);
     }
 
     bindEvents() {
@@ -41,6 +42,7 @@ class Progress {
 
     done() {
         this.unbindEvents();
+        clearTimeout(this.__doneTimer);
         this.__onDone(this.page);
     }
 

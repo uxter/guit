@@ -1,5 +1,6 @@
 import phantom from 'phantom';
 import {writeFile, readFile} from 'fs';
+import imageDiff from 'image-diff';
 import Progress from './progress';
 
 export default class Browser {
@@ -28,6 +29,10 @@ export default class Browser {
         let p = this.progress();
         this.page.then(page => page.open(url));
         return p;
+    }
+
+    close() {
+        return this.page.then(page => page.close());
     }
 
     render(path) {
@@ -68,6 +73,17 @@ export default class Browser {
                 if (err) reject();
                 else resolve(JSON.parse(data));
             });
+        });
+    }
+
+    async diffView(actualImage, expectedImage, diffImage) {
+        await this.render(actualImage);
+        return await new Promise((resolve, reject) => {
+            imageDiff.getFullResult({
+                actualImage: actualImage,
+                expectedImage: expectedImage,
+                diffImage: diffImage,
+            }, (err, result) => (err ? reject() : resolve(result)));
         });
     }
 
