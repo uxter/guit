@@ -70,7 +70,7 @@ export default class JunitReporter {
             reportSpec.data.failure = {
                 '@type': spec.error.type,
                 '@message': spec.error.message,
-                '#cdata': spec.error.stack
+                '#text': spec.error.stack
             };
         }
         reportSpec.data['@time'] = (Date.now() - reportSpec.startTime) / 1000;

@@ -7,7 +7,7 @@
     "gui"
   ],
   "main": "lib/guit.js",
-  "version": "1.0.1-dev",
+  "version": "1.0.2-dev",
   "license": "ISC",
   "repository": {
     "type": "git",
@@ -28,7 +28,16 @@
     "express": "^4.14.0",
     "nodemon": "^1.11.0"
   },
+  "babel": {
+    "presets": [
+      "es2015",
+      "es2017"
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
+  },
   "scripts": {
-    "prepublish": "babel src --out-dir lib --presets es2015,es2017 --plugins transform-object-rest-spread"
+    "prepublish": "babel src --out-dir lib"
   }
 }
