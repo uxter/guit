@@ -74,4 +74,7 @@ export async function runSpecs() {
     startedLog();
     await eachItems(root.items);
     doneLog();
+    if (root.isFailed) {
+        process.exit(1);
+    }
 }
