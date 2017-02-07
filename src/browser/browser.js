@@ -20,14 +20,18 @@ export default class Browser {
     }
 
     progress() {
-        return new Promise((resolve, reject) => this.page
-            .then(page => new Progress(page, resolve, this.checkTimeout, this.doneTimeout))
-            .catch(reject));
+        return new Promise(resolve => this.page
+            .then(page => new Progress({
+                page,
+                done: resolve,
+                checkTimeout: this.checkTimeout,
+                doneTimeout: this.doneTimeout
+            })));
     }
 
     open(url) {
         let p = this.progress();
-        this.page.then(page => page.open(url));
+        return this.page.then(page => page.open(url));
         return p;
     }
 
