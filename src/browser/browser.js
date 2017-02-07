@@ -35,6 +35,10 @@ export default class Browser {
         return this.page.then(page => page.close());
     }
 
+    exit() {
+        return this.page.then(page => page.phantom.exit());
+    }
+
     render(path) {
         return this.page.then(page => page.render(path));
     }
