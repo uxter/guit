@@ -162,7 +162,7 @@ import { Browser } from 'guit';
 Initializing
 
 ```js
-await new Browser({
+let browserInsatnce = await new Browser({
     width: <WIDTH px>,
     height: <WIDTH px>,
     checkTimeout: <TIME ms>,
@@ -174,62 +174,67 @@ Methods
 
 Open page in browser
 ```js
-await Browser.open(<URL>);
+await browserInsatnce.open(<URL>);
 ```
 
 Close page
 ```js
-await Browser.close();
+await browserInsatnce.close();
 ```
 
 Close browser
 ```js
-await Browser.exit();
+await browserInsatnce.exit();
 ```
 
 Render view into image
 ```js
-await Browser.render(<IMAGE PATH>);
+await browserInsatnce.render(<IMAGE PATH>);
 ```
 
 Sleep
 ```js
-await Browser.sleep(<TIME ms>);
+await browserInsatnce.sleep(<TIME ms>);
 ```
 
 Fire mouse event
 ```js
-await Browser.mouseEvent(<TYPE>, <POSITION X>, <POSITION X>, <BUTTON left|right>);
+await browserInsatnce.mouseEvent(
+    <TYPE>,
+    <POSITION X>,
+    <POSITION X>,
+    <BUTTON left|right>
+);
 ```
 
 Fire keyboard event
 ```js
-await Browser.keyboardEvent(<TYPE>, <KEY>);
+await browserInsatnce.keyboardEvent(<TYPE>, <KEY>);
 ```
 
 Return snapshot of computed style
 ```js
-await Browser.getSnapshot();
+await browserInsatnce.getSnapshot();
 ```
 
 Save snapshot of computed style
 ```js
-await Browser.saveSnapshot(<PATH TO FILE>, <SNAPSHOT>);
+await browserInsatnce.saveSnapshot(<PATH TO FILE>, <SNAPSHOT>);
 ```
 
 Load snapshot of computed style
 ```js
-await Browser.loadSnapshot(<PATH TO FILE>);
+await browserInsatnce.loadSnapshot(<PATH TO FILE>);
 ```
 
 Compare current snapshot with saved snapshot
 ```js
-await Browser.diffSnapshot(<PATH TO FILE>);
+await browserInsatnce.diffSnapshot(<PATH TO FILE>);
 ```
 
 Compare current snapshot with saved snapshot
 ```js
-await Browser.diffView(
+await browserInsatnce.diffView(
     <PATH TO ACTUAL IMAGE>,
     <PATH TO EXPECTED IMAGE>,
     <PATH TO DIFF IMAGE>
