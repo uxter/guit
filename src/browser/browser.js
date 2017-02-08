@@ -1,4 +1,5 @@
 import phantom from 'phantom';
+import path from 'path';
 import {writeFile, readFile} from 'fs';
 import imageDiff from 'image-diff';
 import Progress from './progress';
@@ -72,7 +73,7 @@ export default class Browser {
 
     saveSnapshot(pathname, snapshot) {
         return new Promise((resolve, reject) => {
-            writeFile(pathname, JSON.stringify(snapshot), err => {
+            writeFile(path.resolve(pathname), JSON.stringify(snapshot), err => {
                 if (err) reject();
                 else resolve();
             });
@@ -89,12 +90,12 @@ export default class Browser {
     }
 
     async diffView(actualImage, expectedImage, diffImage) {
-        await this.render(actualImage);
+        await this.render(path.resolve(actualImage));
         return await new Promise((resolve, reject) => {
             imageDiff.getFullResult({
-                actualImage: actualImage,
-                expectedImage: expectedImage,
-                diffImage: diffImage,
+                actualImage: path.resolve(actualImage),
+                expectedImage: path.resolve(expectedImage),
+                diffImage: path.resolve(diffImage),
             }, (err, result) => (err ? reject() : resolve(result)));
         });
     }
