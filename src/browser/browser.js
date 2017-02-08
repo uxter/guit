@@ -53,11 +53,15 @@ export default class Browser {
     }
 
     mouseEvent(type, x, y, button = 'left') {
-        return this.page.then(page => page.sendEvent(type, x, y, button));
+        let p = this.progress();
+        this.page.then(page => page.sendEvent(type, x, y, button)).catch(() => {});
+        return p;
     }
 
     keyboardEvent(type, key) {
-        return this.page.then(page => page.sendEvent(type, key));
+        let p = this.progress();
+        this.page.then(page => page.sendEvent(type, key)).catch(() => {});
+        return p;
     }
 
     getSnapshot() {
