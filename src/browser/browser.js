@@ -1,6 +1,7 @@
 import phantom from 'phantom';
 import path from 'path';
-import {writeFile, readFile} from 'fs';
+import { writeFile, readFile } from 'fs';
+import { diff as objectDiff } from 'deep-object-diff';
 import imageDiff from 'image-diff';
 import Progress from './progress';
 
@@ -91,6 +92,13 @@ export default class Browser {
                 else resolve(JSON.parse(data));
             });
         });
+    }
+
+
+    async diffSnapshot(pathname) {
+        let actual = await this.getSnapshot();
+        let original = await this.loadSnapshot(pathname);
+        return objectDiff(actual, original);
     }
 
     async diffView(actualImage, expectedImage, diffImage) {
