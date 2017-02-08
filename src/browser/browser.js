@@ -31,7 +31,7 @@ export default class Browser {
 
     open(url) {
         let p = this.progress();
-        return this.page.then(page => page.open(url));
+        this.page.then(page => page.open(url)).catch(() => {});
         return p;
     }
 
