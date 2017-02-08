@@ -96,7 +96,7 @@ export default class Browser {
                 actualImage: path.resolve(actualImage),
                 expectedImage: path.resolve(expectedImage),
                 diffImage: path.resolve(diffImage),
-            }, (err, result) => (err ? reject() : resolve(result)));
+            }, (err, result) => (err ? reject(err) : resolve(result)));
         });
     }
 
