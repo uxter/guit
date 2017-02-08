@@ -32,7 +32,7 @@ if (fs.existsSync(PACKAGE)) {
 
 commander
     .option('--spec-dir <dir>', 'Specify spec\'s dir to find')
-    .option('--spec-file <regex>', 'Specify spec\'s file regex to run')
+    .option('--spec-files <regex>', 'Specify spec\'s file regex to run')
     .option('--junit-filename <file>', 'Specify junit results file to save')
     .parse(process.argv);
 
@@ -43,6 +43,7 @@ if (!config.specDir) {
     throw new Error('Spec Dir is not specified');
 }
 
+console.log(config.specFiles);
 GUIT.importSpecs({
     specDir: config.specDir,
     specFiles: config.specFiles

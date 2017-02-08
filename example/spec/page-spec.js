@@ -1,5 +1,5 @@
 import { runServer } from '../server';
-import { Browser } from '../../src/guit';
+import { Browser } from '../../lib/guit';
 
 describe('Page specs:', function() {
 

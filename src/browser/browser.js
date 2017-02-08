@@ -94,7 +94,6 @@ export default class Browser {
         });
     }
 
-
     async diffSnapshot(pathname) {
         let actual = await this.getSnapshot();
         let original = await this.loadSnapshot(pathname);
