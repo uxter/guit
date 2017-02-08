@@ -55,6 +55,10 @@ export default class Browser {
         return this.page.then(page => page.sendEvent(type, x, y, button));
     }
 
+    keyboardEvent(type, key) {
+        return this.page.then(page => page.sendEvent(type, key));
+    }
+
     getSnapshot() {
         return this.page.then(page => page.evaluate(() => Array.prototype.slice
             .call(document.querySelectorAll('*'))

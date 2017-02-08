@@ -7,7 +7,7 @@
     "gui"
   ],
   "main": "lib/guit.js",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "license": "ISC",
   "repository": {
     "type": "git",
