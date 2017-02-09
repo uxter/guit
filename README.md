@@ -287,7 +287,7 @@ import { addReporter } from 'guit';
 Usage `addReporter(CustomReporterClass)`
 
 ```js
-export default CustomReporterClass {
+export default class CustomReporterClass {
 
     constructor(config) {
         // ...
