@@ -43,7 +43,6 @@ if (!config.specDir) {
     throw new Error('Spec Dir is not specified');
 }
 
-console.log(config.specFiles);
 GUIT.importSpecs({
     specDir: config.specDir,
     specFiles: config.specFiles

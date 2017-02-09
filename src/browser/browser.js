@@ -65,15 +65,45 @@ export default class Browser {
         return p;
     }
 
-    getSnapshot() {
-        return this.page.then(page => page.evaluate(() => Array.prototype.slice
-            .call(document.querySelectorAll('*'))
-            .map((el) => window.getComputedStyle(el).cssText.split('; ').map(rule => {
-                let result = {};
-                let chunks = rule.split(': ');
-                result[chunks[0]] = chunks[1];
-                return result;
-            }))));
+    getSnapshot(style = true, attributes = true, html = true) {
+        return this.page.then(page => page.evaluate(() => {
+            let getAttributes = (element) => {
+                let attributes = {};
+                for (let i = 0; i < (element.attributes || []).length; i++) {
+                    attributes[element.attributes[i].name] = element.attributes[i].value;
+                }
+                return attributes;
+            };
+            let getStyle = (element) => {
+                let rules = {};
+                let computedStyle = window.getComputedStyle(element);
+                if (!computedStyle) return rules;
+                computedStyle.cssText.split('; ').forEach(function(rule) {
+                    let chunks = rule.split(': ');
+                    rules[chunks[0]] = chunks[1];
+                });
+                return rules;
+            };
+            let getChildren = (element) => {
+                if (!element.children) return [];
+                return Array.prototype.slice.call(element.children).map(elementToStructure);
+            };
+            let elementToStructure = (element) => {
+                return {
+                    name: element.nodeName,
+                    children: getChildren(element),
+                    attributes: getAttributes(element),
+                    html: element.innerHTML,
+                    style: getStyle(element)
+                };
+            };
+            return elementToStructure(document.body);
+        })).then(snapshot => JSON.parse(JSON.stringify(snapshot, (key, value) => {
+            if (key === 'style' && !style) return;
+            if (key === 'attributes' && !attributes) return;
+            if (key === 'html' && !html) return;
+            return value;
+        })));
     }
 
     saveSnapshot(pathname, snapshot) {
@@ -94,8 +124,8 @@ export default class Browser {
         });
     }
 
-    async diffSnapshot(pathname) {
-        let actual = await this.getSnapshot();
+    async diffSnapshot(pathname, style, attributes, html) {
+        let actual = await this.getSnapshot(style, attributes, html);
         let original = await this.loadSnapshot(pathname);
         return objectDiff(actual, original);
     }
