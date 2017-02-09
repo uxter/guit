@@ -1,7 +1,7 @@
 import phantom from 'phantom';
 import path from 'path';
 import { writeFile, readFile } from 'fs';
-import { diff as objectDiff } from 'deep-object-diff';
+import { detailedDiff as objectDiff } from 'deep-object-diff';
 import imageDiff from 'image-diff';
 import Progress from './progress';
 
