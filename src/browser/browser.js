@@ -11,7 +11,8 @@ export default class Browser {
         this.checkTimeout = config.checkTimeout;
         this.doneTimeout = config.doneTimeout;
         this.viewportSize = { width: config.width, height: config.height };
-        this.page = phantom.create().then(instance => this.createPage(instance));
+        this.page = phantom.create(config.args || [])
+            .then(instance => this.createPage(instance));
     }
 
     createPage(instance) {
