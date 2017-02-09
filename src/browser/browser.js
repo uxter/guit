@@ -65,7 +65,7 @@ export default class Browser {
         return p;
     }
 
-    getSnapshot(style = true, attributes = true, html = true) {
+    getSnapshot(ignoreAttributes = []) {
         return this.page.then(page => page.evaluate(() => {
             let getAttributes = (element) => {
                 let attributes = {};
@@ -102,6 +102,7 @@ export default class Browser {
             if (key === 'style' && !style) return;
             if (key === 'attributes' && !attributes) return;
             if (key === 'html' && !html) return;
+            if (ignoreAttributes.indexOf(key) !== -1) return;
             return value;
         })));
     }
@@ -124,8 +125,8 @@ export default class Browser {
         });
     }
 
-    async diffSnapshot(pathname, style, attributes, html) {
-        let actual = await this.getSnapshot(style, attributes, html);
+    async diffSnapshot(pathname, ignoreAttributes) {
+        let actual = await this.getSnapshot(ignoreAttributes);
         let original = await this.loadSnapshot(pathname);
         return objectDiff(actual, original);
     }
