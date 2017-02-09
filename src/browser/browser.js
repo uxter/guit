@@ -99,9 +99,6 @@ export default class Browser {
             };
             return elementToStructure(document.body);
         })).then(snapshot => JSON.parse(JSON.stringify(snapshot, (key, value) => {
-            if (key === 'style' && !style) return;
-            if (key === 'attributes' && !attributes) return;
-            if (key === 'html' && !html) return;
             if (ignoreAttributes.indexOf(key) !== -1) return;
             return value;
         })));
