@@ -214,7 +214,7 @@ await browserInsatnce.keyboardEvent(<TYPE>, <KEY>);
 
 Return snapshot of computed style
 ```js
-await browserInsatnce.getSnapshot();
+await browserInsatnce.getSnapshot(<IGNORE ATTRIBUTES (array)>);
 ```
 
 Save snapshot of computed style
@@ -229,7 +229,11 @@ await browserInsatnce.loadSnapshot(<PATH TO FILE>);
 
 Compare current snapshot with saved snapshot
 ```js
-await browserInsatnce.diffSnapshot(<PATH TO FILE>);
+await browserInsatnce.diffSnapshot(
+    <ACTUAL SNAPSHOT>,
+    <ORIGINAL SNAPSHOT>,
+    <DEVIATION ATTRIBUTES (object)>
+);
 ```
 
 Compare current snapshot with saved snapshot
