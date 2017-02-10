@@ -7,7 +7,7 @@ export default class Snapshot {
     constructor(page) {
         this.page = page;
         this.reUnit = /\d/g;
-        this.reValue = /\d+/g;
+        this.reValue = /[\d\.]+/g;
     }
 
     get(ignoreAttributes = []) {
