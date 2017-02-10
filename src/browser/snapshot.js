@@ -6,7 +6,7 @@ export default class Snapshot {
 
     constructor(page) {
         this.page = page;
-        this.reUnit = /\d/g;
+        this.reUnit = /[\d\.]/g;
         this.reValue = /[\d\.]+/g;
     }
 
@@ -80,9 +80,7 @@ export default class Snapshot {
         for (let i = 0; i < v1.length; i++) {
             if (typeof deviation[i] === 'undefined') return false;
             if (typeof v2[i] === 'undefined') return false;
-            if (Math.abs(v2[i] - v1[i]) > deviation[i]) {
-                return false;
-            }
+            if (Math.abs(v2[i] - v1[i]) > deviation[i]) return false;
         }
         return true;
     }
@@ -98,10 +96,9 @@ export default class Snapshot {
         if (typeof actual !== 'object' &&
             typeof original !== 'object' &&
             typeof _key !== 'undefined' &&
-            _key in deviationAttributes) {
-            if (this.checkDeviation('' + actual, '' + original, deviationAttributes[_key])) {
-                return original;
-            }
+            _key in deviationAttributes &&
+            this.checkDeviation('' + actual, '' + original, deviationAttributes[_key])) {
+            return original;
         }
         return actual;
     }
