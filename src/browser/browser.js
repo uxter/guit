@@ -1,9 +1,8 @@
 import phantom from 'phantom';
 import path from 'path';
-import { writeFile, readFile } from 'fs';
-import { detailedDiff as objectDiff } from 'deep-object-diff';
 import imageDiff from 'image-diff';
 import Progress from './progress';
+import Snapshot from './snapshot';
 
 export default class Browser {
 
@@ -13,6 +12,7 @@ export default class Browser {
         this.viewportSize = { width: config.width, height: config.height };
         this.page = phantom.create(config.args || [])
             .then(instance => this.createPage(instance));
+        this.snapshot = new Snapshot(this.page);
     }
 
     createPage(instance) {
@@ -66,69 +66,6 @@ export default class Browser {
         return p;
     }
 
-    getSnapshot(ignoreAttributes = []) {
-        return this.page.then(page => page.evaluate(() => {
-            let getAttributes = (element) => {
-                let attributes = {};
-                for (let i = 0; i < (element.attributes || []).length; i++) {
-                    attributes[element.attributes[i].name] = element.attributes[i].value;
-                }
-                return attributes;
-            };
-            let getStyle = (element) => {
-                let rules = {};
-                let computedStyle = window.getComputedStyle(element);
-                if (!computedStyle) return rules;
-                computedStyle.cssText.split('; ').forEach(function(rule) {
-                    let chunks = rule.split(': ');
-                    rules[chunks[0]] = chunks[1];
-                });
-                return rules;
-            };
-            let getChildren = (element) => {
-                if (!element.children) return [];
-                return Array.prototype.slice.call(element.children).map(elementToStructure);
-            };
-            let elementToStructure = (element) => {
-                return {
-                    name: element.nodeName,
-                    children: getChildren(element),
-                    attributes: getAttributes(element),
-                    html: element.innerHTML,
-                    style: getStyle(element)
-                };
-            };
-            return elementToStructure(document.body);
-        })).then(snapshot => JSON.parse(JSON.stringify(snapshot, (key, value) => {
-            if (ignoreAttributes.indexOf(key) !== -1) return;
-            return value;
-        })));
-    }
-
-    saveSnapshot(pathname, snapshot) {
-        return new Promise((resolve, reject) => {
-            writeFile(path.resolve(pathname), JSON.stringify(snapshot), err => {
-                if (err) reject();
-                else resolve();
-            });
-        });
-    }
-
-    loadSnapshot(pathname) {
-        return new Promise((resolve, reject) => {
-            readFile(pathname, (err, data) => {
-                if (err) reject();
-                else resolve(JSON.parse(data));
-            });
-        });
-    }
-
-    async diffSnapshot(pathname, ignoreAttributes) {
-        let actual = await this.getSnapshot(ignoreAttributes);
-        let original = await this.loadSnapshot(pathname);
-        return objectDiff(actual, original);
-    }
-
     async diffView(actualImage, expectedImage, diffImage) {
         await this.render(path.resolve(actualImage));
         return await new Promise((resolve, reject) => {
@@ -140,5 +77,20 @@ export default class Browser {
         });
     }
 
-}
+    getSnapshot() {
+        return this.snapshot.get.apply(this.snapshot, arguments);
+    }
 
+    saveSnapshot() {
+        return this.snapshot.save.apply(this.snapshot, arguments);
+    }
+
+    loadSnapshot() {
+        return this.snapshot.load.apply(this.snapshot, arguments);
+    }
+
+    diffSnapshot() {
+        return this.snapshot.diff.apply(this.snapshot, arguments);
+    }
+
+}
