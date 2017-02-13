@@ -26,6 +26,7 @@ async function afterSuite(suite) {
 
 async function runSuite(suite) {
     suite.context = suite.parent ? suite.parent.context : {};
+    Object.assign(suite.context, root.helpers);
     await beforeSuite(suite);
     await eachItems(suite.items);
     await afterSuite(suite);

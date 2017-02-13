@@ -17,6 +17,8 @@ if (fs.existsSync(GUITRC)) {
     if (rcConfig) {
         config.specDir = rcConfig.specDir;
         config.specFiles = rcConfig.specFiles;
+        config.helperDir = rcConfig.helperDir;
+        config.helperFiles = rcConfig.helperFiles;
         config.junitFilename = rcConfig.junitFilename;
     }
 }
@@ -26,6 +28,8 @@ if (fs.existsSync(PACKAGE)) {
     if (packageConfig.guit) {
         config.specDir = packageConfig.guit.specDir || config.specDir;
         config.specFiles = packageConfig.guit.specFiles || config.specFiles;
+        config.helperDir = packageConfig.guit.helperDir || rcConfig.helperDir;
+        config.helperFiles = packageConfig.guit.helperFiles || rcConfig.helperFiles;
         config.junitFilename = packageConfig.guit.junitFilename || config.junitFilename;
     }
 }
@@ -33,20 +37,30 @@ if (fs.existsSync(PACKAGE)) {
 commander
     .option('--spec-dir <dir>', 'Specify spec\'s dir to find')
     .option('--spec-files <regex>', 'Specify spec\'s file regex to run')
+    .option('--helper-dir <dir>', 'Specify helper\'s dir to find')
+    .option('--helper-files <regex>', 'Specify helper\'s file regex to import')
     .option('--junit-filename <file>', 'Specify junit results file to save')
     .parse(process.argv);
 
 config.specDir = commander.specDir || config.specDir;
 config.specFiles = commander.specFiles || config.specFiles || '.*';
+config.helperDir = commander.helperDir || config.helperDir;
+config.helperFiles = commander.helperFiles || config.helperFiles || '.*';
 config.junitFilename = commander.junitFilename || config.junitFilename;
-if (!config.specDir) {
-    throw new Error('Spec Dir is not specified');
+
+if (config.helperDir) {
+    GUIT.importHelpers({
+        helperDir: config.helperDir,
+        helperFiles: config.helperFiles
+    });
 }
 
-GUIT.importSpecs({
-    specDir: config.specDir,
-    specFiles: config.specFiles
-});
+if (config.specDir) {
+    GUIT.importSpecs({
+        specDir: config.specDir,
+        specFiles: config.specFiles
+    });
+}
 
 GUIT.configure({ report: { junitFilename: config.junitFilename } });
 

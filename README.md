@@ -25,7 +25,9 @@ guit --help
 #
 #    -h, --help               output usage information
 #    --spec-dir <dir>         Specify spec's dir to find
-#    --spec-file <regex>      Specify spec's file regex to run
+#    --spec-files <regex>     Specify spec's file regex to run
+#    --helper-dir <dir>       Specify helper's dir to find
+#    --helper-files <regex>   Specify helper's file regex to import
 #    --junit-filename <file>  Specify junit results file to save
 #
 ```
@@ -52,10 +54,12 @@ You may specify the config in `.guitrc`
 
 ```json
 {
+    "helperDir": "helper",
+    "helperFiles": ".*-helper.js",
     "specDir": "spec",
     "specFiles": [
         ".*-spec.js",
-        ".*-case.js"
+        ".*-spec.json"
     ],
     "junitFilename": "junitresults.xml"
 }
@@ -66,10 +70,12 @@ Alternatively, you may specify the field `guit` in your `package.json`
 ```json
 {
   "guit": {
+    "helperDir": "helper",
+    "helperFiles": ".*-helper.js",
     "specDir": "spec",
     "specFiles": [
       ".*-spec.js",
-      ".*-case.js"
+      ".*-spec.json"
     ],
     "junitFilename": "junitresults.xml"
   }
@@ -149,6 +155,92 @@ describe('Suite 1:', function() {
     });
 
 });
+```
+
+Usage json file for create specs
+```json
+{
+  "title": "Suite 1:",
+  "beforeAll": "beforeAllForSuite1",
+  "afterAll": "afterAllForSuite1",
+  "beforeEach": "beforeEachForSuite1",
+  "afterEach": "afterEachForSuite1",
+  "specs": [
+    {
+      "title": "Open page:",
+      "it": [
+        {
+          "action": "open",
+          "args": [ "http://127.0.0.1:3000/" ]
+        },
+        {
+          "action": "sleep",
+          "args": [ 1000 ]
+        },
+        {
+          "action": "checkView",
+          "args": [ "main-page" ]
+        }
+      ]
+    },
+    {
+      "title": "Click button:",
+      "it": [
+        {
+          "action": "mouseEvent",
+          "args": [ "click", 110, 300 ]
+        },
+        {
+          "action": "sleep",
+          "args": [ 1000 ]
+        },
+        {
+          "action": "checkView",
+          "args": [ "main-page-001" ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Helpers
+
+Helper file example
+```js
+export async function open(url) {
+    await this.browser.open(url);
+}
+
+export async function sleep(time) {
+    await this.browser.sleep(time);
+}
+
+export async function mouseEvent(type, x, y) {
+    await this.browser.mouseEvent(type, x, y);
+}
+
+export async function keyboardEvent(type, key) {
+    await this.browser.keyboardEvent(type, key);
+}
+
+export async function beforeAllForSuite1 {
+    // start this.browser
+    // start this.server
+}
+
+export async function afterAllForSuite1 {
+    // stop this.browser
+    // stop this.server
+}
+
+export async function beforeEachForSuite1 {
+    // ...
+}
+
+export async function afterEachForSuite1 {
+    // ...
+}
 ```
 
 ## Tools
@@ -249,7 +341,7 @@ Usage Browser
 
 ```js
 import { runServer } from '../server';
-import { Browser } from '../../lib/guit';
+import { Browser } from 'guit';
 
 describe('Page specs:', function() {
 
@@ -259,7 +351,10 @@ describe('Page specs:', function() {
             width: 1280,
             height: 1024,
             checkTimeout: 100,
-            doneTimeout: 5000
+            doneTimeout: 5000,
+            args: [
+                '--proxy=http://127.0.0.1:8080' // http proxy server
+            ]
         });
     });
 
@@ -282,6 +377,8 @@ describe('Page specs:', function() {
 });
 ```
 
+[Supported args](https://github.com/ariya/phantomjs/blob/master/src/config.cpp#L47)
+
 ### Add custom reporter
 
 ```js
@@ -293,33 +390,19 @@ Usage `addReporter(CustomReporterClass)`
 ```js
 export default class CustomReporterClass {
 
-    constructor(config) {
-        // ...
-    }
+    constructor(config) { /* ... */}
 
-    started() {
-        // ...
-    }
+    started() { /* ... */}
 
-    suiteStarted(suite) {
-        // ...
-    }
+    suiteStarted(suite) { /* ... */}
 
-    specStarted(spec) {
-        // ...
-    }
+    specStarted(spec) { /* ... */}
 
-    specDone(spec) {
-        // ...
-    }
+    specDone(spec) { /* ... */}
 
-    suiteDone(suite) {
-        // ...
-    }
+    suiteDone(suite) { /* ... */ }
 
-    done() {
-        // ...
-    }
+    done() { /* ... */ }
 
 }
 ```
