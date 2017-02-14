@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GUIT:UI Record</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <span class="navbar-brand">GUIT</span>
+            </div>
+            <div class="text-right">
+                <button id="runSpecs" type="button" class="btn btn-danger navbar-btn">RUN Specs</button>
+                <button id="createSuite" type="button" class="btn btn-primary navbar-btn">Create Suite</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sidebar">
+        <ul class="list-unstyled" id="log"></ul>
+    </div>
+
+    <div class="view" id="view"></div>
+
+    <link rel="stylesheet" href="/bootstrap/js/bootstrap.js">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="ui.js"></script>
+</body>
+</html>

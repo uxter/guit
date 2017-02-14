@@ -20,17 +20,19 @@
     "babel-polyfill": "^6.22.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-es2017": "^6.16.0",
+    "bootstrap": "^3.3.7",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
     "deep-object-diff": "^1.0.0",
     "expect": "^1.20.2",
+    "express": "^4.14.1",
     "image-diff": "^1.6.3",
     "phantom": "^3.2.1",
     "recursive-readdir-sync": "^1.0.6",
+    "socket.io": "^1.7.2",
     "xmlbuilder": "^8.2.2"
   },
   "devDependencies": {
-    "express": "^4.14.0",
     "nodemon": "^1.11.0"
   },
   "babel": {

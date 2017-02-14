@@ -20,6 +20,7 @@ if (fs.existsSync(GUITRC)) {
         config.helperDir = rcConfig.helperDir;
         config.helperFiles = rcConfig.helperFiles;
         config.junitFilename = rcConfig.junitFilename;
+        config.uiPort = rcConfig.uiPort ;
     }
 }
 
@@ -31,6 +32,7 @@ if (fs.existsSync(PACKAGE)) {
         config.helperDir = packageConfig.guit.helperDir || rcConfig.helperDir;
         config.helperFiles = packageConfig.guit.helperFiles || rcConfig.helperFiles;
         config.junitFilename = packageConfig.guit.junitFilename || config.junitFilename;
+        config.uiPort  = packageConfig.guit.uiPort || config.uiPort;
     }
 }
 
@@ -40,6 +42,8 @@ commander
     .option('--helper-dir <dir>', 'Specify helper\'s dir to find')
     .option('--helper-files <regex>', 'Specify helper\'s file regex to import')
     .option('--junit-filename <file>', 'Specify junit results file to save')
+    .option('--ui-port <port>', 'Specify port to open UI in browser')
+    .option('--record', 'Open UI in browser for record specs')
     .parse(process.argv);
 
 config.specDir = commander.specDir || config.specDir;
@@ -47,6 +51,7 @@ config.specFiles = commander.specFiles || config.specFiles || '.*';
 config.helperDir = commander.helperDir || config.helperDir;
 config.helperFiles = commander.helperFiles || config.helperFiles || '.*';
 config.junitFilename = commander.junitFilename || config.junitFilename;
+config.uiPort = commander.uiPort || config.uiPort;
 
 if (config.helperDir) {
     GUIT.importHelpers({
@@ -63,7 +68,12 @@ if (config.specDir) {
 }
 
 GUIT.configure({ report: { junitFilename: config.junitFilename } });
-
 GUIT.addReporter(GUIT.TerminalReporter);
 GUIT.addReporter(GUIT.JunitReporter);
-GUIT.runSpecs();
+GUIT.addReporter(GUIT.BrowserReporter);
+
+if (config.uiPort) {
+    GUIT.runUI(config.uiPort || 3000);
+} else {
+    GUIT.runSpecs();
+}

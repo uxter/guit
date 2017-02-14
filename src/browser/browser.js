@@ -1,6 +1,7 @@
 import phantom from 'phantom';
 import path from 'path';
 import imageDiff from 'image-diff';
+import { onUpdateBrowser } from '../ui/server';
 import Progress from './progress';
 import Snapshot from './snapshot';
 
@@ -26,7 +27,7 @@ export default class Browser {
         return new Promise(resolve => this.page
             .then(page => new Progress({
                 page,
-                done: resolve,
+                done: (value) => { onUpdateBrowser(this).then(() => resolve(value)); },
                 checkTimeout: this.checkTimeout,
                 doneTimeout: this.doneTimeout
             })));
@@ -51,7 +52,9 @@ export default class Browser {
     }
 
     sleep(ms) {
-        return new Promise(resolve => setTimeout(() => resolve(), ms));
+        return new Promise(resolve => setTimeout(() => {
+            onUpdateBrowser(this).then(resolve);
+        }, ms));
     }
 
     mouseEvent(type, x, y, button = 'left') {
