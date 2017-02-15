@@ -1,7 +1,7 @@
 import phantom from 'phantom';
 import path from 'path';
 import imageDiff from 'image-diff';
-import { onUpdateBrowser } from '../ui/server';
+import { onUpdateBrowser } from '../ui/ui';
 import Progress from './progress';
 import Snapshot from './snapshot';
 

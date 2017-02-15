@@ -1,6 +1,9 @@
+import Suite from './spec/suite';
+import Spec from './spec/spec';
+
 export function makeSpecsFromJson(data) {
 
-    describe(data.title, function() {
+    new Suite(data.title, function() {
 
         ['beforeAll', 'afterAll', 'beforeEach', 'afterEach'].map(methodName => {
             if (data[methodName]) global[methodName](async function() {
@@ -9,13 +12,13 @@ export function makeSpecsFromJson(data) {
         });
 
         data.specs.map(spec => {
-            it(spec.title, async function() {
+            new Spec(spec.title, async function() {
                 for (let i = 0; i < spec.it.length; i++) {
                     await this[spec.it[i].action].apply(this, spec.it[i].args);
                 }
             });
         });
 
-    });
+    }, data);
 
 }

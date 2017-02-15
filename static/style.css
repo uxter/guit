@@ -51,3 +51,35 @@ html, body {
 .view img {
     border: none;
 }
+.view input {
+    position: absolute;
+    left: -100%;
+    top: -100%;
+    opacity: 0;
+}
+.sidebar-record,
+.sidebar-log,
+#runSpecs,
+#recordSpecs,
+#saveSpecs,
+[active-progress] #loadHelpers,
+[active-progress] #loadSpecs,
+[helpers-loaded][specs-loaded][active-progress] #recordSpecs,
+[helpers-loaded][specs-loaded][active-record] #recordSpecs,
+[active-progress] .sidebar-info,
+[active-record] .sidebar-info,
+[helpers-loaded][specs-loaded][active-record] #runSpecs,
+[helpers-loaded][specs-loaded][active-progress] #runSpecs {
+    display: none;
+}
+
+[helpers-loaded][specs-loaded] #recordSpecs,
+[active-record] #saveSpecs,
+[helpers-loaded][specs-loaded] #runSpecs {
+    display: inline-block;
+}
+
+[active-progress] .sidebar-log,
+[active-record] .sidebar-record {
+    display: block;
+}

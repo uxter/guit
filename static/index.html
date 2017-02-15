@@ -13,18 +13,85 @@
 
     <nav class="navbar navbar-inverse navbar-static-top">
         <div class="container-fluid">
-            <div class="navbar-header">
-                <span class="navbar-brand">GUIT</span>
-            </div>
+            <span class="navbar-brand">GUIT</span>
             <div class="text-right">
-                <button id="runSpecs" type="button" class="btn btn-danger navbar-btn">RUN Specs</button>
-                <button id="createSuite" type="button" class="btn btn-primary navbar-btn">Create Suite</button>
+                <button id="loadHelpers"
+                        type="button"
+                        class="btn btn-primary navbar-btn">
+                    Load Helpers
+                </button>
+                <button id="loadSpecs"
+                        type="button"
+                        class="btn btn-primary navbar-btn">
+                    Load Specs
+                </button>
+                <button id="recordSpecs"
+                        type="button"
+                        class="btn btn-danger navbar-btn">
+                    Record Specs
+                </button>
+                <button id="runSpecs"
+                        type="button"
+                        class="btn btn-success navbar-btn">
+                    RUN Specs
+                </button>
+                <button id="saveSpecs"
+                        type="button"
+                        class="btn btn-success navbar-btn">
+                    Save Specs
+                </button>
             </div>
         </div>
     </nav>
 
-    <div class="sidebar">
+    <div class="sidebar sidebar-info">
+        <pre id="infoData"></pre>
+    </div>
+
+    <div class="sidebar sidebar-log">
         <ul class="list-unstyled" id="log"></ul>
+    </div>
+
+    <div class="sidebar sidebar-record">
+        <div class="form-group">
+            <label for="suiteTitle">Suite Title</label>
+            <input class="form-control" id="suiteTitle">
+        </div>
+        <div class="form-group">
+            <label for="suiteFilename">Suite Filename</label>
+            <input class="form-control" id="suiteFilename">
+        </div>
+        <div class="form-group">
+            <label for="beforeAll">beforeAll</label>
+            <select id="beforeAll" class="form-control"></select>
+            <button id="beforeAllCall" class="btn btn-warning" type="button">Call</button>
+        </div>
+        <div class="form-group">
+            <label for="afterAll">afterAll</label>
+            <select id="afterAll" class="form-control"></select>
+            <button id="afterAllCall" class="btn btn-warning" type="button">Call</button>
+        </div>
+        <div class="form-group">
+            <label for="beforeEach">beforeEach</label>
+            <select id="beforeEach" class="form-control"></select>
+            <button id="beforeEachCall" class="btn btn-warning" type="button">Call</button>
+        </div>
+        <div class="form-group">
+            <label for="afterEach">afterEach</label>
+            <select id="afterEach" class="form-control"></select>
+            <button id="afterEachCall" class="btn btn-warning" type="button">Call</button>
+        </div>
+        <pre id="suiteSource"></pre>
+        <div class="form-group">
+            <input class="form-control" id="specTitle" placeholder="Spec Title">
+            <button id="addSpec" class="btn btn-success" type="button">Add Spec</button>
+        </div>
+        <div class="form-group">
+            <label for="actionName">Select Action</label>
+            <select id="actionName" class="form-control"></select>
+            <input class="form-control" id="actionArgument" placeholder="Action Argument">
+            <button id="addAction" class="btn btn-success" type="button">Add Action</button>
+        </div>
     </div>
 
     <div class="view" id="view"></div>

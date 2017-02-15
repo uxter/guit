@@ -53,27 +53,30 @@ config.helperFiles = commander.helperFiles || config.helperFiles || '.*';
 config.junitFilename = commander.junitFilename || config.junitFilename;
 config.uiPort = commander.uiPort || config.uiPort;
 
-if (config.helperDir) {
-    GUIT.importHelpers({
-        helperDir: config.helperDir,
-        helperFiles: config.helperFiles
-    });
-}
-
-if (config.specDir) {
-    GUIT.importSpecs({
-        specDir: config.specDir,
-        specFiles: config.specFiles
-    });
-}
-
-GUIT.configure({ report: { junitFilename: config.junitFilename } });
-GUIT.addReporter(GUIT.TerminalReporter);
-GUIT.addReporter(GUIT.JunitReporter);
-GUIT.addReporter(GUIT.BrowserReporter);
-
 if (config.uiPort) {
-    GUIT.runUI(config.uiPort || 3000);
+
+    GUIT.runUI(config);
+
 } else {
+
+    if (config.helperDir) {
+        GUIT.importHelpers({
+            helperDir: config.helperDir,
+            helperFiles: config.helperFiles
+        });
+    }
+
+    if (config.specDir) {
+        GUIT.importSpecs({
+            specDir: config.specDir,
+            specFiles: config.specFiles
+        });
+    }
+
+    GUIT.configure(config);
+    GUIT.addReporter(GUIT.TerminalReporter);
+    GUIT.addReporter(GUIT.JunitReporter);
+
     GUIT.runSpecs();
+
 }

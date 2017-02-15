@@ -60,9 +60,10 @@ async function runSpec(spec) {
     if (spec.error) root.isFailed = true;
 }
 
-async function eachItems(items) {
+async function eachItems(items, isUI) {
     for (let i = 0; i < items.length; i++) {
         if (items[i] instanceof Suite) {
+            if (isUI && !items[i].source) continue;
             await runSuite(items[i]);
         }
         if (items[i] instanceof Spec) {
@@ -71,11 +72,11 @@ async function eachItems(items) {
     }
 }
 
-export async function runSpecs() {
+export async function runSpecs(isUI) {
     startedLog();
-    await eachItems(root.items);
+    await eachItems(root.items, isUI);
     doneLog();
-    if (root.isFailed) {
+    if (root.isFailed && !isUI) {
         process.exit(1);
     }
 }

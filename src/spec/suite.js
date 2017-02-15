@@ -2,10 +2,11 @@ import root from '../root';
 
 export default class Suite {
 
-    constructor(title, fn) {
-        this.title = title;
+    constructor(title, fn, source) {
         this.path = [];
         this.beforeAllList = [];
+        this.source = source;
+        this.title = title;
         this.beforeEachList = [];
         this.afterEachList = [];
         this.afterAllList = [];

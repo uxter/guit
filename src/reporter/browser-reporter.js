@@ -1,4 +1,4 @@
-import { printLog } from '../ui/server';
+import { printLog } from '../ui/ui';
 
 export default class BrowserReporter {
 

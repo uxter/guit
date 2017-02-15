@@ -5,7 +5,7 @@ import builder from 'xmlbuilder';
 export default class JunitReporter {
 
     constructor(config) {
-        this.filename = config.report && config.report.junitFilename;
+        this.filename = config.junitFilename;
         if (!this.filename) return;
         this.suiteList = [];
         this.specList = [];

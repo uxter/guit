@@ -33,6 +33,7 @@ export function importSpecs(config) {
         if (specFileItem.test(fileItem)) {
             let specsData = require(path.join(process.cwd(), fileItem));
             if (Array.isArray(specsData.specs)) {
+                specsData.filename = fileItem;
                 makeSpecsFromJson(specsData);
             }
         }

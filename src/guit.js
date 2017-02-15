@@ -18,7 +18,7 @@ export { default as TerminalReporter } from './reporter/terminal-reporter';
 export { default as JunitReporter } from './reporter/junit-reporter';
 export { default as BrowserReporter } from './reporter/browser-reporter';
 export { runSpecs } from './runner';
-export { runUI } from './ui/server';
+export { runUI } from './ui/ui';
 export { addReporter };
 export { importHelpers } from './import';
 export { importSpecs } from './import';
