@@ -4,7 +4,7 @@ import http from 'http';
 import socketIo from 'socket.io'
 
 const tmpDir = path.join(process.cwd(), 'tmp');
-const bootstrapDir = path.join(__dirname, '../../node_modules/bootstrap/dist');
+const bootstrapDir = require.resolve('bootstrap').replace(/dist.*$/, 'dist');
 
 export default function runServer(config) {
 
