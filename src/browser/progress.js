@@ -11,6 +11,7 @@ class Progress {
         this.onReceived = this.onResourceReceived.bind(this);
         this.onError = this.onResourceError.bind(this);
         this.bindEvents();
+        this.checkRequests();
         this.__doneTimer = setTimeout(() => this.done(), config.doneTimeout);
     }
 
@@ -28,6 +29,10 @@ class Progress {
 
     onResourceRequested() {
         this.__requests++;
+        if (this.__timer) {
+            clearTimeout(this.__timer);
+            this.__timer = false;
+        }
         clearTimeout(this.__timer);
     }
 
@@ -35,7 +40,15 @@ class Progress {
         if (res.stage === 'end') {
             this.__requests--;
         }
+        this.checkRequests();
+    }
+
+    checkRequests() {
         if (this.__requests === 0) {
+            if (this.__timer) {
+                clearTimeout(this.__timer);
+                this.__timer = false;
+            }
             this.__timer = setTimeout(() => this.done(), this.checkTimeout);
         }
     }
