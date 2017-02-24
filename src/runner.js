@@ -10,6 +10,8 @@ import {
     doneLog
 } from './report';
 
+const reErrorType = /Expectation\.(\w+)\s/;
+
 async function beforeSuite(suite) {
     suiteStartedLog(suite);
     for (let i = 0; i < suite.beforeAllList.length; i++) {
@@ -55,7 +57,13 @@ async function afterSpec(spec) {
 async function runSpec(spec) {
     root.currentSpec = spec;
     await beforeSpec(spec);
-    await spec.fn.call(spec.suite.context);
+    try {
+        await spec.fn.call(spec.suite.context);
+    } catch(error) {
+        error.type = (error.stack.match(reErrorType) || [])[1];
+        if (!error.type) throw error;
+        root.currentSpec.error = error;
+    }
     await afterSpec(spec);
     if (spec.error) root.isFailed = true;
 }

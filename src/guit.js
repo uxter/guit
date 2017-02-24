@@ -2,7 +2,7 @@ import Suite from './spec/suite';
 import Spec from './spec/spec';
 import { beforeAll, beforeEach, afterEach, afterAll } from './spec/helpers';
 import { addReporter } from './report';
-import expect from './expect';
+import expect from 'expect';
 import root from './root';
 
 global.describe = (title, fn) => new Suite(title, fn);
