@@ -1,4 +1,5 @@
-# guit
+[![GUIT](https://rawgithub.com/shcoder-ru/guit/master/images/guit-logo.png)](https://github.com/shcoder-ru/guit)
+
 The JavaScript framework for testing web UI
 
 [![npm package](https://nodei.co/npm/guit.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/guit)
