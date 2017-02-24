@@ -15,25 +15,23 @@
   },
   "author": "Vasiliy Shilov (shcoder.ru@ya.ru)",
   "dependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-plugin-transform-object-rest-spread": "^6.20.2",
-    "babel-polyfill": "^6.22.0",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-es2017": "^6.16.0",
+    "babel-cli": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-es2017": "^6.22.0",
     "bootstrap": "^3.3.7",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
-    "deep-object-diff": "^1.0.0",
+    "deep-object-diff": "^1.0.1",
     "expect": "^1.20.2",
     "express": "^4.14.1",
     "image-diff": "^1.6.3",
-    "phantom": "^3.2.1",
+    "phantom": "^4.0.0",
     "recursive-readdir-sync": "^1.0.6",
-    "socket.io": "^1.7.2",
+    "socket.io": "^1.7.3",
     "xmlbuilder": "^8.2.2"
-  },
-  "devDependencies": {
-    "nodemon": "^1.11.0"
   },
   "babel": {
     "presets": [
