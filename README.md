@@ -255,7 +255,7 @@ import { Browser } from 'guit';
 Initializing
 
 ```js
-let browserInsatnce = await new Browser({
+let browserInstance = await new Browser({
     width: <WIDTH px>,
     height: <WIDTH px>,
     checkTimeout: <TIME ms>,
@@ -267,32 +267,32 @@ Methods
 
 Open page in browser
 ```js
-await browserInsatnce.open(<URL>);
+await browserInstance.open(<URL>);
 ```
 
 Close page
 ```js
-await browserInsatnce.close();
+await browserInstance.close();
 ```
 
 Close browser
 ```js
-await browserInsatnce.exit();
+await browserInstance.exit();
 ```
 
 Render view into image
 ```js
-await browserInsatnce.render(<IMAGE PATH>);
+await browserInstance.render(<IMAGE PATH>);
 ```
 
 Sleep
 ```js
-await browserInsatnce.sleep(<TIME ms>);
+await browserInstance.sleep(<TIME ms>);
 ```
 
 Fire mouse event
 ```js
-await browserInsatnce.mouseEvent(
+await browserInstance.mouseEvent(
     <TYPE>,
     <POSITION X>,
     <POSITION X>,
@@ -302,27 +302,27 @@ await browserInsatnce.mouseEvent(
 
 Fire keyboard event
 ```js
-await browserInsatnce.keyboardEvent(<TYPE>, <KEY>);
+await browserInstance.keyboardEvent(<TYPE>, <KEY>);
 ```
 
 Return snapshot of computed style
 ```js
-await browserInsatnce.getSnapshot(<IGNORE ATTRIBUTES (array)>);
+await browserInstance.getSnapshot(<IGNORE ATTRIBUTES (array)>);
 ```
 
 Save snapshot of computed style
 ```js
-await browserInsatnce.saveSnapshot(<PATH TO FILE>, <SNAPSHOT>);
+await browserInstance.saveSnapshot(<PATH TO FILE>, <SNAPSHOT>);
 ```
 
 Load snapshot of computed style
 ```js
-await browserInsatnce.loadSnapshot(<PATH TO FILE>);
+await browserInstance.loadSnapshot(<PATH TO FILE>);
 ```
 
 Compare current snapshot with saved snapshot
 ```js
-await browserInsatnce.diffSnapshot(
+await browserInstance.diffSnapshot(
     <ACTUAL SNAPSHOT>,
     <ORIGINAL SNAPSHOT>,
     <DEVIATION ATTRIBUTES (object)>
@@ -331,7 +331,7 @@ await browserInsatnce.diffSnapshot(
 
 Compare current snapshot with saved snapshot
 ```js
-await browserInsatnce.diffView(
+await browserInstance.diffView(
     <PATH TO ACTUAL IMAGE>,
     <PATH TO EXPECTED IMAGE>,
     <PATH TO DIFF IMAGE>
