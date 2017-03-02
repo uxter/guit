@@ -54,7 +54,7 @@ export default class Snapshot {
 
     save(pathname, snapshot) {
         return new Promise((resolve, reject) => {
-            writeFile(path.resolve(pathname), JSON.stringify(snapshot), err => {
+            writeFile(path.resolve(pathname), JSON.stringify(snapshot, null, 2), err => {
                 if (err) reject();
                 else resolve();
             });
