@@ -1,6 +1,7 @@
 import path from 'path';
 import { writeFile, readFile } from 'fs';
 import { detailedDiff as objectDiff } from 'deep-object-diff';
+import { addDetails } from './snapshot-diff-details';
 
 export default class Snapshot {
 
@@ -103,9 +104,15 @@ export default class Snapshot {
         return actual;
     }
 
-    diff(actual, original, deviationAttributes = {}) {
+    diff(actual, original, deviationAttributes = {}, inDetail) {
         this.fixDeviation(actual, original, deviationAttributes);
-        return objectDiff(actual, original);
+        let diff = objectDiff(actual, original);
+        if (inDetail) {
+            diff.added = addDetails(diff.added, actual, original);
+            diff.deleted = addDetails(diff.deleted, actual, original);
+            diff.updated = addDetails(diff.updated, actual, original);
+        }
+        return diff;
     }
 
 }
