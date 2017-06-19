@@ -7,7 +7,7 @@
     "gui"
   ],
   "main": "lib/guit.js",
-  "version": "1.4.10",
+  "version": "1.4.11",
   "license": "ISC",
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "expect": "^1.20.2",
     "express": "^4.14.1",
     "image-diff": "^1.6.3",
+    "mkdirp": "^0.5.1",
     "phantom": "^4.0.0",
     "recursive-readdir-sync": "^1.0.6",
     "socket.io": "^1.7.3",
