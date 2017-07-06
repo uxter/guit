@@ -1,0 +1,4 @@
+--compilers js:babel-core/register
+--reporter=mocha-lcov-reporter
+--recursive
+tests/**/*.test.js

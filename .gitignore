@@ -1,12 +1,6 @@
-node_modules
-lib
-tmp
-Desktop.ini
 .idea
-.project
-.settings
-.DS_Store
-*.diff
-*.patch
 *.log
-*~
+*.log.*
+*.lcov
+dist
+node_modules
