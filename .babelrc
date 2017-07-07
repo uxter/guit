@@ -9,7 +9,9 @@
   ],
   "env": {
     "test": {
-      "plugins": [ "transform-coverage" ]
+      "plugins": [
+        "istanbul"
+      ]
     }
   }
 }
