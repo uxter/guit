@@ -31,7 +31,12 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "test": "mocha --opts tests/test-mocha.opts",
-    "coverage": "nyc --require babel-core/register --reporter=lcovonly npm run test",
+    "test-watch": "nodemon --watch ./tests --exec 'npm run test'",
+    "coverage": "nyc --require babel-core/register --reporter=lcov npm run test",
+    "coverage-server": "http-server -a 127.0.0.1 -p 2017 ./coverage/lcov-report",
+    "coverage-livereload": "livereload ./coverage -e html -w 1000",
+    "coverage-watch": "nodemon --watch ./tests --exec 'npm run coverage'",
+    "watch": "concurrently 'npm run coverage-watch' 'npm run coverage-server' 'npm run coverage-livereload'",
     "readme": "jsdoc2md --template README.hbs --files src/guit.js > README.md",
     "prepublish": "npm run build"
   },
@@ -48,9 +53,13 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "codecov": "^2.2.0",
+    "concurrently": "^3.5.0",
     "expect": "^1.20.2",
+    "http-server": "^0.10.0",
     "jsdoc-to-markdown": "^3.0.0",
+    "livereload": "^0.6.2",
     "mocha": "^3.4.2",
+    "nodemon": "^1.11.0",
     "nyc": "^11.0.3"
   }
 }

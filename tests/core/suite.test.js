@@ -11,4 +11,17 @@ describe('core/suite specs:', function () {
 
     });
 
+    it('should throw an exception if a second argument is not a function.', function () {
+
+        expect(function () {
+            new Suite('Some specs:', 2);
+        }).toThrow('A second argument must be a function.');
+
+    });
+
+    it('should ...', function () {
+        let suiteInstance = new Suite('Some specs:', function() {});
+        // expect(suiteInstance).toType(Suite);
+    });
+
 });
