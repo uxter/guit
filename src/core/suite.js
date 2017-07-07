@@ -1,7 +1,5 @@
-import {
-    checkArgumentType,
-    checkArgumentConstructor
-} from '../utils/check-argument';
+import {checkArgumentType} from '../utils/check-argument';
+import Composite from './composite';
 
 /**
  * A container that has a set of tests.
@@ -9,7 +7,7 @@ import {
  * @class Suite
  * @public
  */
-export default class Suite {
+export default class Suite extends Composite {
 
     /**
      * @param {string} title - A test suite name
@@ -19,59 +17,13 @@ export default class Suite {
     constructor(title, creator) {
         checkArgumentType(title, 'first', 'string');
         checkArgumentType(creator, 'second', 'function');
-        this.path = [];
+        super();
         this.title = title;
         this.beforeAllList = [];
         this.beforeEachList = [];
         this.afterEachList = [];
         this.afterAllList = [];
-        this.parent = null;
-        this.children = [];
         this.creator = creator;
-    }
-
-    /**
-     * Add an instance as a child
-     * @method addChild
-     * @param {Suite} child - an instance of a Suite
-     */
-    addChild(child) {
-        checkArgumentConstructor(child, 'first', Suite);
-        this.children.push(child);
-        child.parent = this;
-        child.path = [...this.path, child];
-    }
-
-    /**
-     * Remove a child by reference to its instance
-     * @method removeChild
-     * @param {Suite} child - an instance of a Suite
-     */
-    removeChild(child) {
-        checkArgumentConstructor(child, 'first', Suite);
-        let index = this.children.indexOf(child);
-        if (index > -1) {
-            this.children.splice(index, 1);
-        }
-    }
-
-    /**
-     * Get a child instance by its index
-     * @param {number} index - index of child
-     * @return {(Suite|null)} - an instance of a Suite or null
-     */
-    getChild(index) {
-        checkArgumentType(index, 'first', 'number');
-        return this.children[index] || null;
-    }
-
-    /**
-     * Check the availability of children
-     * @method hasChildren
-     * @return {boolean}
-     */
-    hasChildren() {
-        return this.children.length > 0;
     }
 
     /**
