@@ -115,42 +115,6 @@ export default class Suite {
     }
 
     /**
-     * Get helpers that run before all specs
-     * @method getBeforeAllHelpersList
-     * @return {Array.<function>} - array or functions that run before all specs
-     */
-    getBeforeAllHelpersList() {
-        return this.beforeAllList;
-    }
-
-    /**
-     * Get helpers that run before each specs
-     * @method getBeforeEachHelpersList
-     * @return {Array.<function>} - array or functions that run before each specs
-     */
-    getBeforeEachHelpersList() {
-        return this.beforeEachList;
-    }
-
-    /**
-     * Get helpers that run after each specs
-     * @method getAfterEachHelpersList
-     * @return {Array.<function>} - array or functions that run after each specs
-     */
-    getAfterEachHelpersList() {
-        return this.afterEachList;
-    }
-
-    /**
-     * Get helpers that run after all specs
-     * @method getAfterAllHelpersList
-     * @return {Array.<function>} - array or functions that run after all specs
-     */
-    getAfterAllHelpersList() {
-        return this.afterAllList;
-    }
-
-    /**
      * Run suite creator
      * @method create
      */
