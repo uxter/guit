@@ -1,6 +1,6 @@
 {
   "name": "guit",
-  "description": "GUI testing tool",
+  "description": "The JavaScript framework for testing web UI",
   "keywords": [
     "tool",
     "test",
@@ -32,7 +32,7 @@
     "build": "babel src --out-dir dist",
     "test": "mocha --opts tests/test-mocha.opts",
     "coverage": "nyc --require babel-core/register --reporter=lcovonly npm run test",
-    "make-readme": "jsdoc2md --template README.hbs --files src/guit.js > README.md",
+    "readme": "jsdoc2md --template README.hbs --files src/guit.js > README.md",
     "prepublish": "npm run build"
   },
   "dependencies": {
