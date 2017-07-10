@@ -1,4 +1,4 @@
-import {checkArgumentType} from '../utils/check-argument';
+import {checkArgumentType} from '../utils/check-type';
 import Composite from './composite';
 
 /**
@@ -10,13 +10,14 @@ import Composite from './composite';
 export default class Suite extends Composite {
 
     /**
+     * @constructor
      * @param {string} title - A test suite name
      * @param {function} creator - A test suite creator
-     * @constructor
+     * @throws {TypeError}
      */
     constructor(title, creator) {
-        checkArgumentType(title, 'first', 'string');
-        checkArgumentType(creator, 'second', 'function');
+        checkArgumentType(title, 'string', 'first');
+        checkArgumentType(creator, 'function', 'second');
         super();
         this.title = title;
         this.beforeAllList = [];
@@ -30,9 +31,10 @@ export default class Suite extends Composite {
      * Add helper than runs before all specs
      * @method addBeforeAllHelper
      * @param {function} helper - function than runs before all specs
+     * @throws {TypeError}
      */
     addBeforeAllHelper(helper) {
-        checkArgumentType(helper, 'first', 'function');
+        checkArgumentType(helper, 'function', 'first');
         this.beforeAllList.push(helper);
     }
 
@@ -40,9 +42,10 @@ export default class Suite extends Composite {
      * Add helper than runs before each specs
      * @method addBeforeEachHelper
      * @param {function} helper - function than runs before each specs
+     * @throws {TypeError}
      */
     addBeforeEachHelper(helper) {
-        checkArgumentType(helper, 'first', 'function');
+        checkArgumentType(helper, 'function', 'first');
         this.beforeEachList.push(helper);
     }
 
@@ -50,9 +53,10 @@ export default class Suite extends Composite {
      * Add helper than runs after each specs
      * @method addAfterEachHelper
      * @param {function} helper - function than runs after each specs
+     * @throws {TypeError}
      */
     addAfterEachHelper(helper) {
-        checkArgumentType(helper, 'first', 'function');
+        checkArgumentType(helper, 'function', 'first');
         this.afterEachList.push(helper);
     }
 
@@ -60,9 +64,10 @@ export default class Suite extends Composite {
      * Add helper than runs after all specs
      * @method addAfterAllHelper
      * @param {function} helper - function than runs after all specs
+     * @throws {TypeError}
      */
     addAfterAllHelper(helper) {
-        checkArgumentType(helper, 'first', 'function');
+        checkArgumentType(helper, 'function', 'first');
         this.afterAllList.push(helper);
     }
 

@@ -1,4 +1,4 @@
-import {checkArgumentType} from '../utils/check-argument';
+import {checkArgumentType} from '../utils/check-type';
 import Composite from './composite';
 
 /**
@@ -9,13 +9,14 @@ import Composite from './composite';
 export default class Spec extends Composite {
 
     /**
+     * @constructor
      * @param {string} title - A test specification name
      * @param {function} executor - A test specification executor
-     * @constructor
+     * @throws {TypeError}
      */
     constructor(title, executor) {
-        checkArgumentType(title, 'first', 'string');
-        checkArgumentType(executor, 'second', 'function');
+        checkArgumentType(title, 'string', 'first');
+        checkArgumentType(executor, 'function', 'second');
         super();
         this.title = title;
         this.executor = executor;

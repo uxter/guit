@@ -1,7 +1,5 @@
-import {
-    checkArgumentType,
-    checkArgumentConstructor
-} from '../utils/check-argument';
+import {checkArgumentType} from '../utils/check-type';
+import {checkArgumentInstance} from '../utils/check-instance';
 
 /**
  * An implementation of the pattern "Composite".
@@ -23,9 +21,10 @@ export default class Composite {
      * Add an instance as a child
      * @method addChild
      * @param {Composite} child - an instance of a Composite
+     * @throws {TypeError}
      */
     addChild(child) {
-        checkArgumentConstructor(child, 'first', Composite);
+        checkArgumentInstance(child, Composite, 'first');
         this.children.push(child);
         child.parent = this;
         child.path = [...this.path, child];
@@ -35,9 +34,10 @@ export default class Composite {
      * Remove a child by reference to its instance
      * @method removeChild
      * @param {Composite} child - an instance of a Composite
+     * @throws {TypeError}
      */
     removeChild(child) {
-        checkArgumentConstructor(child, 'first', Composite);
+        checkArgumentInstance(child, Composite, 'first');
         let index = this.children.indexOf(child);
         if (index > -1) {
             this.children.splice(index, 1);
@@ -48,9 +48,10 @@ export default class Composite {
      * Get a child instance by its index
      * @param {number} index - index of child
      * @return {(Composite|null)} - an instance of a Composite or null
+     * @throws {TypeError}
      */
     getChild(index) {
-        checkArgumentType(index, 'first', 'number');
+        checkArgumentType(index, 'number', 'first');
         return this.children[index] || null;
     }
 
