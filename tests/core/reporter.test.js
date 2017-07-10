@@ -18,20 +18,11 @@ describe('core/reporter specs:', function () {
         it('constructor should throw an exception if a specification of a report strategy not implement a method "started".', function () {
 
             class SomeReporStrategy {
-                suiteStarted() {
-                }
-
-                specStarted() {
-                }
-
-                specDone() {
-                }
-
-                suiteDone() {
-                }
-
-                done() {
-                }
+                suiteStarted() {}
+                specStarted() {}
+                specDone() {}
+                suiteDone() {}
+                done() {}
             }
             expect(function () {
                 new Reporter(new SomeReporStrategy());
@@ -42,20 +33,11 @@ describe('core/reporter specs:', function () {
         it('constructor should throw an exception if a specification of a report strategy not implement a method "suiteStarted".', function () {
 
             class SomeReporStrategy {
-                started() {
-                }
-
-                specStarted() {
-                }
-
-                specDone() {
-                }
-
-                suiteDone() {
-                }
-
-                done() {
-                }
+                started() {}
+                specStarted() {}
+                specDone() {}
+                suiteDone() {}
+                done() {}
             }
             expect(function () {
                 new Reporter(new SomeReporStrategy());
@@ -66,20 +48,11 @@ describe('core/reporter specs:', function () {
         it('constructor should throw an exception if a specification of a report strategy not implement a method "specStarted".', function () {
 
             class SomeReporStrategy {
-                started() {
-                }
-
-                suiteStarted() {
-                }
-
-                specDone() {
-                }
-
-                suiteDone() {
-                }
-
-                done() {
-                }
+                started() {}
+                suiteStarted() {}
+                specDone() {}
+                suiteDone() {}
+                done() {}
             }
             expect(function () {
                 new Reporter(new SomeReporStrategy());
@@ -90,20 +63,11 @@ describe('core/reporter specs:', function () {
         it('constructor should throw an exception if a specification of a report strategy not implement a method "specDone".', function () {
 
             class SomeReporStrategy {
-                started() {
-                }
-
-                suiteStarted() {
-                }
-
-                specStarted() {
-                }
-
-                suiteDone() {
-                }
-
-                done() {
-                }
+                started() {}
+                suiteStarted() {}
+                specStarted() {}
+                suiteDone() {}
+                done() {}
             }
             expect(function () {
                 new Reporter(new SomeReporStrategy());
@@ -114,20 +78,11 @@ describe('core/reporter specs:', function () {
         it('constructor should throw an exception if a specification of a report strategy not implement a method "suiteDone".', function () {
 
             class SomeReporStrategy {
-                started() {
-                }
-
-                suiteStarted() {
-                }
-
-                specStarted() {
-                }
-
-                specDone() {
-                }
-
-                done() {
-                }
+                started() {}
+                suiteStarted() {}
+                specStarted() {}
+                specDone() {}
+                done() {}
             }
             expect(function () {
                 new Reporter(new SomeReporStrategy());
@@ -138,20 +93,11 @@ describe('core/reporter specs:', function () {
         it('constructor should throw an exception if a specification of a report strategy not implement a method "done".', function () {
 
             class SomeReporStrategy {
-                started() {
-                }
-
-                suiteStarted() {
-                }
-
-                specStarted() {
-                }
-
-                specDone() {
-                }
-
-                suiteDone() {
-                }
+                started() {}
+                suiteStarted() {}
+                specStarted() {}
+                specDone() {}
+                suiteDone() {}
             }
             expect(function () {
                 new Reporter(new SomeReporStrategy());
