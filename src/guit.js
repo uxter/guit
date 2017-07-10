@@ -8,6 +8,7 @@
  */
 
 import Builder from './core/builder';
+import Reporter from './core/reporter';
 import {scanDirectory} from './utils/scan-directory';
 
 let builders = [];
@@ -42,12 +43,85 @@ export function builder(strategy) {
 }
 
 /**
- * @TODO implement Reporter
+ * Append a report strategy
+ * @function reporter
+ * @param {Object} strategy
+ * @public
+ *
+ * @example
+ * class HttpReportStrategy {
+ *
+ *   constructor(url) {
+ *     this.remote = new Remote(url);
+ *   }
+
+ *   started() {
+ *     this.remote.send({
+ *       title: 'Testing started'
+ *       action: 'started',
+ *       type: 'tests',
+ *     });
+ *   }
+ *
+ *   suiteStarted(suiteInstance) {
+ *     this.remote.send({
+ *       title: suiteInstance.title,
+ *       action: 'started',
+ *       type: 'suite',
+ *       pathLength: suiteInstance.path.length
+ *     });
+ *   }
+ *
+ *   specStarted(specInstance) {
+ *     this.remote.send({
+ *       title: specInstance.title,
+ *       action: 'started',
+ *       type: 'spec',
+ *       pathLength: specInstance.path.length
+ *     });
+ *   }
+ *
+ *   specDone(specInstance) {
+ *     this.remote.send({
+ *       title: specInstance.title,
+ *       action: 'done',
+ *       type: 'spec',
+ *       pathLength: specInstance.path.length
+ *     });
+ *   }
+ *
+ *   suiteDone(suiteInstance) {
+ *     this.remote.send({
+ *       title: suiteInstance.title,
+ *       action: 'done',
+ *       type: 'suite',
+ *       pathLength: suiteInstance.path.length
+ *     });
+ *   }
+ *
+ *   done() {
+ *     this.remote.send({
+ *       title: 'Testing done'
+ *       action: 'done',
+ *       type: 'tests',
+ *     });
+ *   }
+ *
+ * }
+ *
+ * reporter(new HttpReportStrategy(url));
+ * reporter(new OtherReportStrategy(path));
+ */
 export function reporter(strategy) {
     reporters.push(new Reporter(strategy));
 }
- */
 
+/**
+ * Search for helper and spec files
+ * @function scan
+ * @param {{helpers: <string>, specs: <string>}} config - pattern of path to helpers and specs
+ * @return {Promise.<void>}
+ */
 export async function scan(config) {
     await Promise.all([
         scanDirectory(config.helpers),

@@ -37,6 +37,13 @@ export default class Builder {
         return result;
     }
 
+    /**
+     * Make composition of Suite and Spec instances
+     * @method build
+     * @param {string} filePath
+     * @return {Composite}
+     * @throws {TypeError}
+     */
     build(filePath) {
         checkArgumentType(filePath, 'string', 'first');
         let result = this.strategy.build(filePath);
