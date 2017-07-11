@@ -14,8 +14,8 @@ import {checkArgumentInstance} from '../utils/check-instance';
  * compositeCollection.getItem(0);
  * compositeCollection.removeItem(compositeItem);
  *
- * let iterator = compositeCollection.makeIterator();
- * for (let compositeItem of iterator) {
+ * let iterable = compositeCollection.makeIterable();
+ * for (let compositeItem of iterable) {
  *   // use compositeItem
  * }
  */
@@ -79,6 +79,21 @@ export default class Collection {
     }
 
     /**
+     * Clone current collection
+     * Return new instance of Collection that contains same list of items
+     * @method clone
+     * @return {Collection}
+     */
+    clone() {
+        let iterable = this.makeIterable();
+        let clonedCollection = new Collection(this.type);
+        for (let item of iterable) {
+            clonedCollection.addItem(item);
+        }
+        return clonedCollection;
+    }
+
+    /**
      * Return an object that provides a next() method which returns the next item in the sequence.
      * next returns an object with two properties: done and value.
      * @method makeIterator
@@ -98,6 +113,21 @@ export default class Collection {
                         done: true
                     };
                 }
+            }
+        };
+    }
+
+    /**
+     * Return a zero arguments function that returns an object,
+     * conforming to the iterator protocol.
+     * @method makeIterable
+     * @return {*} iterable
+     */
+    makeIterable() {
+        let self = this;
+        return {
+            [Symbol.iterator]() {
+                return self.makeIterator();
             }
         };
     }

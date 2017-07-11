@@ -128,6 +128,37 @@ describe('core/collection specs:', function () {
             });
         });
 
+        it('makeIterable should return a zero arguments function that returns an object,'+
+            ' conforming to the iterator protocol.', function () {
+            class SomeClass {}
+            let someCollection = new Collection(SomeClass);
+            let firstInstance = new SomeClass();
+            let secondInstance = new SomeClass();
+            let thirdInstance = new SomeClass();
+            let list = [firstInstance, secondInstance, thirdInstance];
+            list.forEach(item => someCollection.addItem(item));
+            let iterable = someCollection.makeIterable();
+            let i = 0;
+            for (let item of iterable) {
+                expect(item).toBe(list[i]);
+                i++;
+            }
+        });
+
+        it('clone should clone current collection', function () {
+            class SomeClass {}
+            let someCollection = new Collection(SomeClass);
+            let firstInstance = new SomeClass();
+            let secondInstance = new SomeClass();
+            let thirdInstance = new SomeClass();
+            [firstInstance, secondInstance, thirdInstance].forEach(item => someCollection.addItem(item));
+            let clonedCollection = someCollection.clone();
+            expect(clonedCollection === someCollection).toBe(false);
+            expect(clonedCollection.getItem(0)).toBe(firstInstance);
+            expect(clonedCollection.getItem(1)).toBe(secondInstance);
+            expect(clonedCollection.getItem(2)).toBe(thirdInstance);
+        });
+
     });
 
 });
