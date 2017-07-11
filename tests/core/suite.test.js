@@ -62,40 +62,50 @@ describe('core/suite specs:', function () {
     describe('working specs:', function () {
 
         it('addBeforeAllHelper should add helper.', function () {
+
             let suiteInstance = new Suite('Parent specs:', function() {});
             let helper = function() {};
             suiteInstance.addBeforeAllHelper(helper);
             expect(suiteInstance.beforeAllList[0]).toBe(helper);
+
         });
 
         it('addBeforeEachHelper should add helper.', function () {
+
             let suiteInstance = new Suite('Parent specs:', function() {});
             let helper = function() {};
             suiteInstance.addBeforeEachHelper(helper);
             expect(suiteInstance.beforeEachList[0]).toBe(helper);
+
         });
 
         it('addAfterAllHelper should add helper.', function () {
+
             let suiteInstance = new Suite('Parent specs:', function() {});
             let helper = function() {};
             suiteInstance.addAfterAllHelper(helper);
             expect(suiteInstance.afterAllList[0]).toBe(helper);
+
         });
 
         it('addAfterEachHelper should add helper.', function () {
+
             let suiteInstance = new Suite('Parent specs:', function() {});
             let helper = function() {};
             suiteInstance.addAfterEachHelper(helper);
             expect(suiteInstance.afterEachList[0]).toBe(helper);
+
         });
 
         it('create should run creator.', function () {
+
             let isExecuted = false;
             let suiteInstance = new Suite('Parent specs:', function() {
                 isExecuted = true;
             });
             suiteInstance.create();
             expect(isExecuted).toBe(true);
+
         });
 
     });

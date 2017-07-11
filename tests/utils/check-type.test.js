@@ -169,73 +169,105 @@ describe('utils/check-type specs:', function () {
     describe('is[Type] specs:', function () {
 
         it('isFunction should return true.', function () {
+
             expect(isFunction(function() {})).toBe(true);
+
         });
 
         it('isFunction should return false.', function () {
+
             expect(isFunction(1)).toBe(false);
+
         });
 
         it('isString should return true.', function () {
+
             expect(isString('1')).toBe(true);
+
         });
 
         it('isString should return false.', function () {
+
             expect(isString(1)).toBe(false);
+
         });
 
         it('isNull should return true.', function () {
+
             expect(isNull(null)).toBe(true);
+
         });
 
         it('isNull should return false.', function () {
+
             expect(isNull('null')).toBe(false);
+
         });
 
         it('isObject should return true.', function () {
+
             expect(isObject({})).toBe(true);
+
         });
 
         it('isObject should return false.', function () {
+
             expect(isObject('{}')).toBe(false);
             expect(isObject(null)).toBe(false);
+
         });
 
         it('isArray should return true.', function () {
+
             expect(isArray([])).toBe(true);
+
         });
 
         it('isArray should return false.', function () {
+
             expect(isArray({})).toBe(false);
+
         });
 
         it('isBoolean should return true.', function () {
+
             expect(isBoolean(true)).toBe(true);
             expect(isBoolean(false)).toBe(true);
+
         });
 
         it('isBoolean should return false.', function () {
+
             expect(isBoolean({})).toBe(false);
             expect(isBoolean(1)).toBe(false);
+
         });
 
         it('isNumber should return true.', function () {
+
             expect(isNumber(1)).toBe(true);
             expect(isNumber(Infinity)).toBe(true);
+
         });
 
         it('isNumber should return false.', function () {
+
             expect(isNumber(NaN)).toBe(false);
             expect(isNumber('1')).toBe(false);
+
         });
 
         it('isUndefined should return true.', function () {
+
             expect(isUndefined()).toBe(true);
+
         });
 
         it('isUndefined should return false.', function () {
+
             expect(isUndefined('')).toBe(false);
             expect(isUndefined(0)).toBe(false);
+
         });
 
     });

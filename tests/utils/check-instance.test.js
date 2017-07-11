@@ -50,9 +50,7 @@ describe('utils/check-instance specs:', function () {
 
         it('should return undefined if an argument is an instance of constructor.', function () {
 
-            function SomeConstructor() {
-            }
-
+            function SomeConstructor() {}
             let someInstance = new SomeConstructor();
             expect(checkArgumentInstance(someInstance, SomeConstructor, 'second')).toBe(undefined);
 
