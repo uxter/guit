@@ -45,54 +45,59 @@ describe('core/composite specs:', function () {
 
     describe('working specs:', function () {
 
-        it('addChild should add child.', function () {
-            let compositeParentInstance = new Composite('Parent item', function() {});
-            let compositeChildInstance = new Composite('Child item', function() {});
-            compositeParentInstance.addChild(compositeChildInstance);
-            expect(compositeParentInstance.children[0]).toBe(compositeChildInstance);
-        });
+        it('addChild should add child, getChild should return first child.', function () {
 
-        it('getChild should return first child.', function () {
             let compositeParentInstance = new Composite('Parent item', function() {});
             let compositeChildInstance = new Composite('Child item', function() {});
             compositeParentInstance.addChild(compositeChildInstance);
             expect(compositeParentInstance.getChild(0)).toBe(compositeChildInstance);
+
         });
 
         it('getChild should return null.', function () {
+
             let compositeParentInstance = new Composite('Parent item', function() {});
             let compositeChildInstance = new Composite('Child item', function() {});
             compositeParentInstance.addChild(compositeChildInstance);
             expect(compositeParentInstance.getChild(1)).toBe(null);
+
         });
 
         it('removeChild should remove child.', function () {
+
             let compositeParentInstance = new Composite('Parent item', function() {});
             let compositeChildInstance = new Composite('Child item', function() {});
             compositeParentInstance.addChild(compositeChildInstance);
             compositeParentInstance.removeChild(compositeChildInstance);
-            expect(compositeParentInstance.children).toEqual([]);
+            expect(compositeParentInstance.children.hasItems()).toBe(false);
+
         });
 
         it('removeChild should\'n remove anything.', function () {
+
             let compositeParentInstance = new Composite('Parent item', function() {});
             let compositeChildInstance = new Composite('Child item', function() {});
             let compositeOtherInstance = new Composite('Other item', function() {});
             compositeParentInstance.addChild(compositeChildInstance);
             compositeParentInstance.removeChild(compositeOtherInstance);
-            expect(compositeParentInstance.children[0]).toBe(compositeChildInstance);
+            expect(compositeParentInstance.children.getItem(0)).toBe(compositeChildInstance);
+
         });
 
         it('hasChildren should return false.', function () {
+
             let compositeInstance = new Composite('Parent item', function() {});
             expect(compositeInstance.hasChildren()).toBe(false);
+
         });
 
         it('hasChildren should return true.', function () {
+
             let compositeParentInstance = new Composite('Parent item', function() {});
             let compositeChildInstance = new Composite('Child item', function() {});
             compositeParentInstance.addChild(compositeChildInstance);
             expect(compositeParentInstance.hasChildren()).toBe(true);
+
         });
 
     });

@@ -1,5 +1,4 @@
-import {checkArgumentType} from '../utils/check-type';
-import {checkArgumentInstance} from '../utils/check-instance';
+import Collection from './collection';
 
 /**
  * An implementation of the pattern "Composite".
@@ -12,9 +11,9 @@ export default class Composite {
      * @constructor
      */
     constructor() {
-        this.path = [];
+        this.path = new Collection(Composite);
         this.parent = null;
-        this.children = [];
+        this.children = new Collection(Composite);
     }
 
     /**
@@ -24,10 +23,10 @@ export default class Composite {
      * @throws {TypeError}
      */
     addChild(child) {
-        checkArgumentInstance(child, Composite, 'first');
-        this.children.push(child);
+        this.children.addItem(child);
         child.parent = this;
-        child.path = [...this.path, child];
+        child.path = this.path.clone();
+        child.path.addItem(child);
     }
 
     /**
@@ -37,22 +36,18 @@ export default class Composite {
      * @throws {TypeError}
      */
     removeChild(child) {
-        checkArgumentInstance(child, Composite, 'first');
-        let index = this.children.indexOf(child);
-        if (index > -1) {
-            this.children.splice(index, 1);
-        }
+        this.children.removeItem(child);
     }
 
     /**
      * Get a child instance by its index
+     * @method getChild
      * @param {number} index - index of child
      * @return {(Composite|null)} - an instance of a Composite or null
      * @throws {TypeError}
      */
     getChild(index) {
-        checkArgumentType(index, 'number', 'first');
-        return this.children[index] || null;
+        return this.children.getItem(index);
     }
 
     /**
@@ -61,7 +56,7 @@ export default class Composite {
      * @return {boolean}
      */
     hasChildren() {
-        return this.children.length > 0;
+        return this.children.hasItems();
     }
 
 }
