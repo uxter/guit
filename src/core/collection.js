@@ -1,4 +1,4 @@
-import {checkArgumentType, isString, isFunction} from '../utils/check-type';
+import {checkArgumentType} from '../utils/check-type';
 import {checkArgumentInstance} from '../utils/check-instance';
 
 /**
