@@ -1,4 +1,4 @@
-import {checkArgumentType} from './check-type';
+import {checkArgumentType, isString, isFunction} from './check-type';
 
 /**
  * Check class specification (methods list)
@@ -25,10 +25,10 @@ export function checkClassSpec(instance, methods) {
  * @private
  */
 function checkMethod(instance, method) {
-    if (typeof method !== 'string') {
+    if (!isString(method)) {
         throw new TypeError('A method name must be string.');
     }
-    if (typeof instance[method] !== 'function') {
+    if (!isFunction(instance[method])) {
         let className = instance.constructor.name;
         throw new TypeError(className + ' specification must implement a method "' + method + '".');
     }

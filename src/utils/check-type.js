@@ -27,6 +27,94 @@ export function checkResultType(result, type, name) {
 }
 
 /**
+ * Check whether a variable is an object
+ * @function isObject
+ * @param {*} variable - variable whose type should be checked
+ * @return {boolean}
+ * @public
+ */
+export function isObject(variable) {
+    return variable !== null && typeof variable === 'object';
+}
+
+/**
+ * Check whether a variable is a null
+ * @function isNull
+ * @param {*} variable - variable whose type should be checked
+ * @return {boolean}
+ * @public
+ */
+export function isNull(variable) {
+    return variable === null;
+}
+
+/**
+ * Check whether a variable is an array
+ * @function isArray
+ * @param {*} variable - variable whose type should be checked
+ * @return {boolean}
+ * @public
+ */
+export function isArray(variable) {
+    return Array.isArray(variable);
+}
+
+/**
+ * Check whether a variable is a number
+ * @function isNumber
+ * @param {*} variable - variable whose type should be checked
+ * @return {boolean}
+ * @public
+ */
+export function isNumber(variable) {
+    return typeof variable === 'number' && !isNaN(variable);
+}
+
+/**
+ * Check whether a variable is a boolean
+ * @function isBoolean
+ * @param {*} variable - variable whose type should be checked
+ * @return {boolean}
+ * @public
+ */
+export function isBoolean(variable) {
+    return typeof variable === 'boolean';
+}
+
+/**
+ * Check whether a variable is a string
+ * @function isString
+ * @param {*} variable - variable whose type should be checked
+ * @return {boolean}
+ * @public
+ */
+export function isString(variable) {
+    return typeof variable === 'string';
+}
+
+/**
+ * Check whether a variable is a function
+ * @function isFunction
+ * @param {*} variable - variable whose type should be checked
+ * @return {boolean}
+ * @public
+ */
+export function isFunction(variable) {
+    return typeof variable === 'function';
+}
+
+/**
+ * Check whether a variable is an undefined
+ * @function isUndefined
+ * @param {*} variable - variable whose type should be checked
+ * @return {boolean}
+ * @public
+ */
+export function isUndefined(variable) {
+    return typeof variable === 'undefined';
+}
+
+/**
  * Check type
  * @function checkType
  * @param {*} variable - variable whose type should be checked
@@ -39,13 +127,16 @@ function checkType(variable, type, message) {
     let wrongTypeOf = false;
     switch (type) {
         case 'object':
-            wrongTypeOf = variable === null || typeof variable !== type;
+            wrongTypeOf = !isObject(variable);
             break;
         case 'null':
-            wrongTypeOf = variable !== null;
+            wrongTypeOf = !isNull(variable);
             break;
         case 'array':
-            wrongTypeOf = !Array.isArray(variable);
+            wrongTypeOf = !isArray(variable);
+            break;
+        case 'number':
+            wrongTypeOf = !isNumber(variable);
             break;
         default:
             wrongTypeOf = typeof variable !== type;
@@ -65,10 +156,10 @@ function checkType(variable, type, message) {
  * @private
  */
 function checkArgs(second, third) {
-    if (typeof second !== 'string') {
+    if (!isString(second)) {
         throw new TypeError('A second argument must be a string.');
     }
-    if (typeof third !== 'string') {
+    if (!isString(third)) {
         throw new TypeError('A third argument must be a string.');
     }
 }
