@@ -1,10 +1,12 @@
 import Collection from './collection';
+import traversable from '../decorators/traversable';
 
 /**
  * An implementation of the pattern "Composite".
  * @class Composite
  * @public
  */
+@traversable('children')
 export default class Composite {
 
     /**
