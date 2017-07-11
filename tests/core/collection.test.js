@@ -48,31 +48,38 @@ describe('core/collection specs:', function () {
     describe('working specs:', function () {
 
         it('addItem should add child, getItem should return first item.', function () {
+
             class SomeClass {}
             let someCollection = new Collection(SomeClass);
             let someInstance = new SomeClass();
             someCollection.addItem(someInstance);
             expect(someCollection.getItem(0)).toBe(someInstance);
+
         });
 
         it('getItem should return null.', function () {
+
             class SomeClass {}
             let someCollection = new Collection(SomeClass);
             let someInstance = new SomeClass();
             someCollection.addItem(someInstance);
             expect(someCollection.getItem(1)).toBe(null);
+
         });
 
         it('removeItem should remove item.', function () {
+
             class SomeClass {}
             let someCollection = new Collection(SomeClass);
             let someInstance = new SomeClass();
             someCollection.addItem(someInstance);
             someCollection.removeItem(someInstance);
             expect(someCollection.list).toEqual([]);
+
         });
 
         it('removeItem should\'n remove anything.', function () {
+
             class SomeClass {}
             let someCollection = new Collection(SomeClass);
             let someInstance = new SomeClass();
@@ -80,56 +87,29 @@ describe('core/collection specs:', function () {
             someCollection.addItem(someInstance);
             someCollection.removeItem(otherInstance);
             expect(someCollection.list[0]).toBe(someInstance);
+
         });
 
         it('hasItems should return false.', function () {
+
             class SomeClass {}
             let someCollection = new Collection(SomeClass);
             expect(someCollection.hasItems()).toBe(false);
+
         });
 
         it('hasItems should return true.', function () {
+
             class SomeClass {}
             let someCollection = new Collection(SomeClass);
             let someInstance = new SomeClass();
             someCollection.addItem(someInstance);
             expect(someCollection.hasItems()).toBe(true);
+
         });
 
-        it('makeIterator should return an object that provides a next() method', function () {
-            class SomeClass {}
-            let someCollection = new Collection(SomeClass);
-            let iterator = someCollection.makeIterator();
-            expect(typeof iterator.next).toBe('function');
-        });
+        it('Collection instance must be iterable.', function () {
 
-        it('iterator should return a next item', function () {
-            class SomeClass {}
-            let someCollection = new Collection(SomeClass);
-            let firstInstance = new SomeClass();
-            let secondInstance = new SomeClass();
-            let thirdInstance = new SomeClass();
-            [firstInstance, secondInstance, thirdInstance].forEach(item => someCollection.addItem(item));
-            let iterator = someCollection.makeIterator();
-            expect(iterator.next()).toEqual({
-                value: firstInstance,
-                done: false
-            });
-            expect(iterator.next()).toEqual({
-                value: secondInstance,
-                done: false
-            });
-            expect(iterator.next()).toEqual({
-                value: thirdInstance,
-                done: false
-            });
-            expect(iterator.next()).toEqual({
-                done: true
-            });
-        });
-
-        it('makeIterable should return a zero arguments function that returns an object,'+
-            ' conforming to the iterator protocol.', function () {
             class SomeClass {}
             let someCollection = new Collection(SomeClass);
             let firstInstance = new SomeClass();
@@ -137,15 +117,16 @@ describe('core/collection specs:', function () {
             let thirdInstance = new SomeClass();
             let list = [firstInstance, secondInstance, thirdInstance];
             list.forEach(item => someCollection.addItem(item));
-            let iterable = someCollection.makeIterable();
             let i = 0;
-            for (let item of iterable) {
+            for (let item of someCollection) {
                 expect(item).toBe(list[i]);
                 i++;
             }
+
         });
 
         it('clone should clone current collection', function () {
+
             class SomeClass {}
             let someCollection = new Collection(SomeClass);
             let firstInstance = new SomeClass();
@@ -157,6 +138,7 @@ describe('core/collection specs:', function () {
             expect(clonedCollection.getItem(0)).toBe(firstInstance);
             expect(clonedCollection.getItem(1)).toBe(secondInstance);
             expect(clonedCollection.getItem(2)).toBe(thirdInstance);
+
         });
 
     });

@@ -1,5 +1,6 @@
 import {checkArgumentType} from '../utils/check-type';
 import {checkArgumentInstance} from '../utils/check-instance';
+import iterable from '../decorators/iterable';
 
 /**
  * Typed collection
@@ -19,11 +20,12 @@ import {checkArgumentInstance} from '../utils/check-instance';
  *   // use compositeItem
  * }
  */
+@iterable('list')
 export default class Collection {
 
     /**
      * @constructor
-     * @param {(function)} type - type of items (class or function-constructor),
+     * @param {function} type - type of items (class or function-constructor)
      * @throws {TypeError}
      */
     constructor(type) {
@@ -85,51 +87,11 @@ export default class Collection {
      * @return {Collection}
      */
     clone() {
-        let iterable = this.makeIterable();
         let clonedCollection = new Collection(this.type);
-        for (let item of iterable) {
+        for (let item of this) {
             clonedCollection.addItem(item);
         }
         return clonedCollection;
-    }
-
-    /**
-     * Return an object that provides a next() method which returns the next item in the sequence.
-     * next returns an object with two properties: done and value.
-     * @method makeIterator
-     * @return {{next: (function())}}
-     */
-    makeIterator() {
-        let nextIndex = 0;
-        return {
-            next: () => {
-                if (nextIndex < this.list.length) {
-                    return {
-                        value: this.list[nextIndex++],
-                        done: false
-                    };
-                } else {
-                    return {
-                        done: true
-                    };
-                }
-            }
-        };
-    }
-
-    /**
-     * Return a zero arguments function that returns an object,
-     * conforming to the iterator protocol.
-     * @method makeIterable
-     * @return {*} iterable
-     */
-    makeIterable() {
-        let self = this;
-        return {
-            [Symbol.iterator]() {
-                return self.makeIterator();
-            }
-        };
     }
 
 }
