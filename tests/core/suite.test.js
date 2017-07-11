@@ -66,7 +66,7 @@ describe('core/suite specs:', function () {
             let suiteInstance = new Suite('Parent specs:', function() {});
             let helper = function() {};
             suiteInstance.addBeforeAllHelper(helper);
-            expect(suiteInstance.beforeAllList[0]).toBe(helper);
+            expect(suiteInstance.beforeAllList.getItem(0)).toBe(helper);
 
         });
 
@@ -75,7 +75,7 @@ describe('core/suite specs:', function () {
             let suiteInstance = new Suite('Parent specs:', function() {});
             let helper = function() {};
             suiteInstance.addBeforeEachHelper(helper);
-            expect(suiteInstance.beforeEachList[0]).toBe(helper);
+            expect(suiteInstance.beforeEachList.getItem(0)).toBe(helper);
 
         });
 
@@ -84,7 +84,7 @@ describe('core/suite specs:', function () {
             let suiteInstance = new Suite('Parent specs:', function() {});
             let helper = function() {};
             suiteInstance.addAfterAllHelper(helper);
-            expect(suiteInstance.afterAllList[0]).toBe(helper);
+            expect(suiteInstance.afterAllList.getItem(0)).toBe(helper);
 
         });
 
@@ -93,7 +93,7 @@ describe('core/suite specs:', function () {
             let suiteInstance = new Suite('Parent specs:', function() {});
             let helper = function() {};
             suiteInstance.addAfterEachHelper(helper);
-            expect(suiteInstance.afterEachList[0]).toBe(helper);
+            expect(suiteInstance.afterEachList.getItem(0)).toBe(helper);
 
         });
 

@@ -9,7 +9,7 @@ describe('core/collection specs:', function () {
 
             expect(function () {
                 new Collection(null);
-            }).toThrow('A first argument must be a function.');
+            }).toThrow('A first argument must be a function or a string.');
 
         });
 
@@ -46,6 +46,20 @@ describe('core/collection specs:', function () {
     });
 
     describe('working specs:', function () {
+
+        it('constructor should create collection of functions.', function () {
+
+            let functionsList = [
+                function() {},
+                function() {}
+            ];
+            let functionsCollection = new Collection('function');
+            functionsCollection.addItem(functionsList[0]);
+            functionsCollection.addItem(functionsList[1]);
+            expect(functionsCollection.getItem(0)).toBe(functionsList[0]);
+            expect(functionsCollection.getItem(1)).toBe(functionsList[1]);
+
+        });
 
         it('addItem should add child, getItem should return first item.', function () {
 

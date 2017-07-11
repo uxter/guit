@@ -1,4 +1,4 @@
-import {checkArgumentType} from '../utils/check-type';
+import {checkArgumentType, isFunction, isString } from '../utils/check-type';
 import {checkArgumentInstance} from '../utils/check-instance';
 import iterable from '../decorators/iterable';
 
@@ -25,12 +25,20 @@ export default class Collection {
 
     /**
      * @constructor
-     * @param {function} type - type of items (class or function-constructor)
+     * @param {(function|string)} type - type of items
+     * can be a class, function-constructor
+     * or "boolean", "null", "undefined", "number", "string", "object", "array", "function"
      * @throws {TypeError}
      */
     constructor(type) {
-        checkArgumentType(type, 'function', 'first');
         this.type = type;
+        if (isFunction(type)) {
+            this.checkItem = checkArgumentInstance;
+        } else if (isString(type)) {
+            this.checkItem = checkArgumentType;
+        } else {
+            throw new TypeError('A first argument must be a function or a string.');
+        }
         this.list = [];
     }
 
@@ -41,7 +49,7 @@ export default class Collection {
      * @throws {TypeError}
      */
     addItem(item) {
-        checkArgumentInstance(item, this.type, 'first');
+        this.checkItem(item, this.type, 'first');
         this.list.push(item);
     }
 
@@ -64,7 +72,7 @@ export default class Collection {
      * @throws {TypeError}
      */
     removeItem(item) {
-        checkArgumentInstance(item, this.type, 'first');
+        this.checkItem(item, this.type, 'first');
         let index = this.list.indexOf(item);
         if (index > -1) {
             this.list.splice(index, 1);

@@ -1,5 +1,6 @@
 import {checkArgumentType} from '../utils/check-type';
 import Composite from './composite';
+import Collection from './collection';
 
 /**
  * A container that has a set of tests.
@@ -20,10 +21,10 @@ export default class Suite extends Composite {
         checkArgumentType(creator, 'function', 'second');
         super();
         this.title = title;
-        this.beforeAllList = [];
-        this.beforeEachList = [];
-        this.afterEachList = [];
-        this.afterAllList = [];
+        this.beforeAllList = new Collection('function');
+        this.beforeEachList = new Collection('function');
+        this.afterEachList = new Collection('function');
+        this.afterAllList = new Collection('function');
         this.creator = creator;
     }
 
@@ -34,8 +35,7 @@ export default class Suite extends Composite {
      * @throws {TypeError}
      */
     addBeforeAllHelper(helper) {
-        checkArgumentType(helper, 'function', 'first');
-        this.beforeAllList.push(helper);
+        this.beforeAllList.addItem(helper);
     }
 
     /**
@@ -45,8 +45,7 @@ export default class Suite extends Composite {
      * @throws {TypeError}
      */
     addBeforeEachHelper(helper) {
-        checkArgumentType(helper, 'function', 'first');
-        this.beforeEachList.push(helper);
+        this.beforeEachList.addItem(helper);
     }
 
     /**
@@ -56,8 +55,7 @@ export default class Suite extends Composite {
      * @throws {TypeError}
      */
     addAfterEachHelper(helper) {
-        checkArgumentType(helper, 'function', 'first');
-        this.afterEachList.push(helper);
+        this.afterEachList.addItem(helper);
     }
 
     /**
@@ -67,8 +65,7 @@ export default class Suite extends Composite {
      * @throws {TypeError}
      */
     addAfterAllHelper(helper) {
-        checkArgumentType(helper, 'function', 'first');
-        this.afterAllList.push(helper);
+        this.afterAllList.addItem(helper);
     }
 
     /**
