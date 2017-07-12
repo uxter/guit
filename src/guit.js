@@ -14,7 +14,6 @@ import {scanDirectory} from './utils/scan-directory';
 let builders = [];
 let reporters = [];
 let specFiles = [];
-let helperFiles = [];
 
 /**
  * Append a build strategy
@@ -117,19 +116,20 @@ export function reporter(strategy) {
 }
 
 /**
- * Search for helper and spec files
+ * Search for spec files
+ * async function
  * @function scan
- * @param {{helpers: <string>, specs: <string>}} config - pattern of path to helpers and specs
+ * @param {{specs: <string>}} config - pattern of path to specs
  * @return {Promise.<void>}
+ * @public
+ *
+ * @example
+ * scan({
+ *   specs: 'tests/specs/*.js'
+ * });
  */
 export async function scan(config) {
-    await Promise.all([
-        scanDirectory(config.helpers),
-        scanDirectory(config.specs)
-    ]).then(files => {
-        helperFiles = files[0];
-        specFiles = files[1];
-    })
+    specFiles = await scanDirectory(config.specs);
 }
 
 export function test(filePath) {
