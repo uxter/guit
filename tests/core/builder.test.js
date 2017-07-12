@@ -17,7 +17,9 @@ describe('core/builder specs:', function () {
 
         it('constructor should throw an exception if a specification of a build strategy not implement a method "test".', function () {
 
-            class SomeBuildStrategy {}
+            class SomeBuildStrategy {
+                build() {}
+            }
             expect(function () {
                 new Builder(new SomeBuildStrategy());
             }).toThrow('SomeBuildStrategy specification must implement a method "test".');
@@ -48,16 +50,17 @@ describe('core/builder specs:', function () {
 
         });
 
-        it('build should throw an exception if a first is not a string', function () {
+        it('build should throw an exception if a first is not a string', function (done) {
 
             class SomeBuildStrategy {
                 test() {}
                 build() {}
             }
             let builderInstance = new Builder(new SomeBuildStrategy());
-            expect(function () {
-                builderInstance.build(1);
-            }).toThrow('A first argument must be a string.');
+            builderInstance.build(1).catch(err => {
+                expect(err.message).toBe('A first argument must be a string.');
+                done();
+            });
 
         });
 
@@ -74,7 +77,7 @@ describe('core/builder specs:', function () {
 
         });
 
-        it('build should throw an exception if a result is not an instance of Composite', function () {
+        it('build should reject if a result is not an instance of Composite', function (done) {
 
             class SomeBuildStrategy {
                 test() {}
@@ -83,9 +86,10 @@ describe('core/builder specs:', function () {
                 }
             }
             let builderInstance = new Builder(new SomeBuildStrategy());
-            expect(function () {
-                builderInstance.build('/path/to/spec-file.js');
-            }).toThrow('SomeBuildStrategy.build must return an instance of Composite.');
+            builderInstance.build('/path/to/spec-file.js').catch(err => {
+                expect(err.message).toBe('SomeBuildStrategy.build must return an instance of Composite.');
+                done();
+            });
 
         });
 
@@ -121,7 +125,7 @@ describe('core/builder specs:', function () {
 
         });
 
-        it('build should return an instance of Composite', function () {
+        it('build should return an instance of Composite', function (done) {
 
             class SomeBuildStrategy {
                 test(filePath) {
@@ -133,7 +137,10 @@ describe('core/builder specs:', function () {
                 }
             }
             let builderInstance = new Builder(new SomeBuildStrategy());
-            expect(builderInstance.build('/path/to/spec-file.js') instanceof Composite).toBe(true);
+            builderInstance.build('/path/to/spec-file.js').then(result => {
+                expect(result instanceof Composite).toBe(true);
+                done();
+            });
 
         });
 

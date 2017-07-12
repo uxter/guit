@@ -39,14 +39,15 @@ export default class Builder {
 
     /**
      * Make composition of Suite and Spec instances
+     * async function
      * @method build
      * @param {string} filePath
-     * @return {Composite}
+     * @return {Promise.<Composite>}
      * @throws {TypeError}
      */
-    build(filePath) {
+    async build(filePath) {
         checkArgumentType(filePath, 'string', 'first');
-        let result = this.strategy.build(filePath);
+        let result = await this.strategy.build(filePath);
         checkResultInstance(result, Composite, this.strategy.constructor.name + '.build');
         return result;
     }
