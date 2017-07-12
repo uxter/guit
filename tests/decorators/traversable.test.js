@@ -27,7 +27,23 @@ describe('decorators/traversable specs:', function () {
 
         });
 
-        it('should reject if a property is not an instance of Collection.', function (done) {
+        it('traverse should reject if a property is not an instance of Collection.', function (done) {
+
+            @traversable('children')
+            class SomeClass {
+                constructor() {
+                    this.children = [];
+                }
+            }
+            let someInstance = new SomeClass();
+            someInstance.traverse(true).catch(err => {
+                expect(err.message).toBe('Property children must be an instance of Collection.');
+                done();
+            });
+
+        });
+
+        it('traverse should reject if a first argument is not a function.', function (done) {
 
             @traversable('children')
             class SomeClass {
@@ -36,8 +52,24 @@ describe('decorators/traversable specs:', function () {
                 }
             }
             let someInstance = new SomeClass();
-            someInstance.traverse(true).catch(err => {
+            someInstance.traverse(true, function() {}).catch(err => {
                 expect(err.message).toBe('A first argument must be a function.');
+                done();
+            });
+
+        });
+
+        it('traverse should reject if a second argument is not a function.', function (done) {
+
+            @traversable('children')
+            class SomeClass {
+                constructor() {
+                    this.children = new Collection(SomeClass);
+                }
+            }
+            let someInstance = new SomeClass();
+            someInstance.traverse(function() {}, true).catch(err => {
+                expect(err.message).toBe('A second argument must be a function.');
                 done();
             });
 
@@ -72,13 +104,24 @@ describe('decorators/traversable specs:', function () {
                     setTimeout(resolve, 2);
                 });
             }
-            rootInstance.traverse(execute).then(() => {
+            async function doneBranch(instance) {
+                await new Promise((resolve) => {
+                    list.push(instance.data + '-done');
+                    setTimeout(resolve, 2);
+                });
+            }
+            rootInstance.traverse(execute, doneBranch).then(() => {
                 expect(list).toEqual([
                     'root',
                     'level2-0',
+                    'level2-0-done',
                     'level2-1',
                     'level2-1-0',
-                    'level2-2'
+                    'level2-1-0-done',
+                    'level2-1-done',
+                    'level2-2',
+                    'level2-2-done',
+                    'root-done'
                 ]);
                 done();
             });

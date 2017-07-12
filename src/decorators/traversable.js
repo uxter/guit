@@ -24,18 +24,21 @@ export default function traversable(property) {
          * Async method for traversing of a composition
          * @function traverse
          * @param execute - async function
+         * @param done - async function
          * @return {Promise.<void>}
          * @public
          */
-        target.prototype.traverse = async function traverse(execute) {
+        target.prototype.traverse = async function traverse(execute, done) {
             if (!(this[property] instanceof Collection)) {
                 throw new TypeError('Property ' + property + ' must be an instance of Collection.');
             }
             checkArgumentType(execute, 'function', 'first');
+            checkArgumentType(done, 'function', 'second');
             await execute(this);
             for (let child of this[property]) {
-                await child.traverse(execute);
+                await child.traverse(execute, done);
             }
+            await done(this);
         };
     };
 
