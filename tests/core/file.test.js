@@ -22,6 +22,16 @@ describe('core/file specs:', function () {
 
         });
 
+        it('read should throw an exception if a file is not exists.', function (done) {
+
+            let fileInstance = new File('path/to/file');
+            fileInstance.read().catch(err => {
+                expect(err.code).toBe('ENOENT');
+                done();
+            });
+
+        });
+
     });
 
     describe('working specs:', function () {
@@ -34,6 +44,19 @@ describe('core/file specs:', function () {
             expect(fileInstance.getStatus()).toBe('success');
             fileInstance.setStatus('fail');
             expect(fileInstance.getStatus()).toBe('fail');
+
+        });
+
+        it('read should return file content.', function (done) {
+
+            let expectedContent = 'describe(\'Some specs:\', function () {\n\n    ' +
+                'it(\'should do something.\', function () {\n\n        ' +
+                '// something\n\n    });\n\n});';
+            let fileInstance = new File('./tests/mocks/read-file.js');
+            fileInstance.read().then(content => {
+                expect(content.indexOf(expectedContent)).toBe(0);
+                done();
+            });
 
         });
 
