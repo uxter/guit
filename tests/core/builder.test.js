@@ -2,6 +2,7 @@ import expect from 'expect';
 import Builder from '../../src/core/builder';
 import Composite from '../../src/core/composite';
 import Suite from '../../src/core/suite';
+import File from '../../src/core/file';
 
 describe('core/builder specs:', function () {
 
@@ -37,7 +38,7 @@ describe('core/builder specs:', function () {
 
         });
 
-        it('test should throw an exception if a first argument is not a string', function () {
+        it('test should throw an exception if a first argument is not an object', function () {
 
             class SomeBuildStrategy {
                 test() {}
@@ -46,25 +47,11 @@ describe('core/builder specs:', function () {
             let builderInstance = new Builder(new SomeBuildStrategy());
             expect(function () {
                 builderInstance.test(1);
-            }).toThrow('A first argument must be a string.');
+            }).toThrow('A first argument must be an object.');
 
         });
 
-        it('build should throw an exception if a first is not a string', function (done) {
-
-            class SomeBuildStrategy {
-                test() {}
-                build() {}
-            }
-            let builderInstance = new Builder(new SomeBuildStrategy());
-            builderInstance.build(1).catch(err => {
-                expect(err.message).toBe('A first argument must be a string.');
-                done();
-            });
-
-        });
-
-        it('test should throw an exception if a result is not a boolean', function () {
+        it('test should throw an exception if a first argument is not an instance of File', function () {
 
             class SomeBuildStrategy {
                 test() {}
@@ -72,7 +59,48 @@ describe('core/builder specs:', function () {
             }
             let builderInstance = new Builder(new SomeBuildStrategy());
             expect(function () {
-                builderInstance.test('/path/to/spec-file.js');
+                builderInstance.test({});
+            }).toThrow('A first argument must be an instance of File.');
+
+        });
+
+        it('build should reject if a first is not an object', function (done) {
+
+            class SomeBuildStrategy {
+                test() {}
+                build() {}
+            }
+            let builderInstance = new Builder(new SomeBuildStrategy());
+            builderInstance.build(1).catch(err => {
+                expect(err.message).toBe('A first argument must be an object.');
+                done();
+            });
+
+        });
+
+        it('build should reject if a first is not an instance of File', function (done) {
+
+            class SomeBuildStrategy {
+                test() {}
+                build() {}
+            }
+            let builderInstance = new Builder(new SomeBuildStrategy());
+            builderInstance.build({}).catch(err => {
+                expect(err.message).toBe('A first argument must be an instance of File.');
+                done();
+            });
+
+        });
+
+        it('test should throw an exception if a result is not a boolean.', function () {
+
+            class SomeBuildStrategy {
+                test() {}
+                build() {}
+            }
+            let builderInstance = new Builder(new SomeBuildStrategy());
+            expect(function () {
+                builderInstance.test(new File('/path/to/spec-file.js'));
             }).toThrow('SomeBuildStrategy.test must return a boolean.');
 
         });
@@ -86,7 +114,7 @@ describe('core/builder specs:', function () {
                 }
             }
             let builderInstance = new Builder(new SomeBuildStrategy());
-            builderInstance.build('/path/to/spec-file.js').catch(err => {
+            builderInstance.build(new File('/path/to/spec-file.js')).catch(err => {
                 expect(err.message).toBe('SomeBuildStrategy.build must return an instance of Composite.');
                 done();
             });
@@ -100,44 +128,44 @@ describe('core/builder specs:', function () {
         it('test should return false', function () {
 
             class SomeBuildStrategy {
-                test(filePath) {
+                test(fileInstance) {
                     let re = /\.js$/;
-                    return re.test(filePath);
+                    return re.test(fileInstance.path);
                 }
                 build() {}
             }
             let builderInstance = new Builder(new SomeBuildStrategy());
-            expect(builderInstance.test('/path/to/spec-file.json')).toBe(false);
+            expect(builderInstance.test(new File('/path/to/spec-file.json'))).toBe(false);
 
         });
 
         it('test should return true', function () {
 
             class SomeBuildStrategy {
-                test(filePath) {
+                test(fileInstance) {
                     let re = /\.js$/;
-                    return re.test(filePath);
+                    return re.test(fileInstance.path);
                 }
                 build() {}
             }
             let builderInstance = new Builder(new SomeBuildStrategy());
-            expect(builderInstance.test('/path/to/spec-file.js')).toBe(true);
+            expect(builderInstance.test(new File('/path/to/spec-file.js'))).toBe(true);
 
         });
 
         it('build should return an instance of Composite', function (done) {
 
             class SomeBuildStrategy {
-                test(filePath) {
+                test(fileInstance) {
                     let re = /\.js$/;
-                    return re.test(filePath);
+                    return re.test(fileInstance.path);
                 }
                 build() {
                     return new Suite('Some specs:', function() {});
                 }
             }
             let builderInstance = new Builder(new SomeBuildStrategy());
-            builderInstance.build('/path/to/spec-file.js').then(result => {
+            builderInstance.build(new File('/path/to/spec-file.js')).then(result => {
                 expect(result instanceof Composite).toBe(true);
                 done();
             });
