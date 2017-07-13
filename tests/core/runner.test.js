@@ -1,5 +1,7 @@
 import expect from 'expect';
 import Runner from '../../src/core/runner';
+import Composite from '../../src/core/composite';
+import File from '../../src/core/file';
 
 describe('core/runner specs:', function () {
 
@@ -10,17 +12,6 @@ describe('core/runner specs:', function () {
             expect(function () {
                 new Runner(1);
             }).toThrow('A first argument must be an object.');
-
-        });
-
-        it('setStatus should throw an exception if a status is not supported.', function () {
-
-            let runnerInstance = new Runner({
-                specs: 'path/to/specs'
-            });
-            expect(function () {
-                runnerInstance.setStatus('done');
-            }).toThrow('Status done is not supported.');
 
         });
 
@@ -76,7 +67,7 @@ describe('core/runner specs:', function () {
 
         it('addReporterStrategy should throw an exception if a specification of a report strategy not implement a method "started".', function () {
 
-            class SomeReporStrategy {
+            class SomeReportStrategy {
                 suiteStarted() {}
                 specStarted() {}
                 specDone() {}
@@ -87,14 +78,14 @@ describe('core/runner specs:', function () {
                 specs: 'path/to/specs'
             });
             expect(function () {
-                runnerInstance.addReporterStrategy(new SomeReporStrategy());
-            }).toThrow('SomeReporStrategy specification must implement a method "started".');
+                runnerInstance.addReporterStrategy(new SomeReportStrategy());
+            }).toThrow('SomeReportStrategy specification must implement a method "started".');
 
         });
 
         it('addReporterStrategy should throw an exception if a specification of a report strategy not implement a method "suiteStarted".', function () {
 
-            class SomeReporStrategy {
+            class SomeReportStrategy {
                 started() {}
                 specStarted() {}
                 specDone() {}
@@ -105,14 +96,14 @@ describe('core/runner specs:', function () {
                 specs: 'path/to/specs'
             });
             expect(function () {
-                runnerInstance.addReporterStrategy(new SomeReporStrategy());
-            }).toThrow('SomeReporStrategy specification must implement a method "suiteStarted".');
+                runnerInstance.addReporterStrategy(new SomeReportStrategy());
+            }).toThrow('SomeReportStrategy specification must implement a method "suiteStarted".');
 
         });
 
         it('addReporterStrategy should throw an exception if a specification of a report strategy not implement a method "specStarted".', function () {
 
-            class SomeReporStrategy {
+            class SomeReportStrategy {
                 started() {}
                 suiteStarted() {}
                 specDone() {}
@@ -123,14 +114,14 @@ describe('core/runner specs:', function () {
                 specs: 'path/to/specs'
             });
             expect(function () {
-                runnerInstance.addReporterStrategy(new SomeReporStrategy());
-            }).toThrow('SomeReporStrategy specification must implement a method "specStarted".');
+                runnerInstance.addReporterStrategy(new SomeReportStrategy());
+            }).toThrow('SomeReportStrategy specification must implement a method "specStarted".');
 
         });
 
         it('addReporterStrategy should throw an exception if a specification of a report strategy not implement a method "specDone".', function () {
 
-            class SomeReporStrategy {
+            class SomeReportStrategy {
                 started() {}
                 suiteStarted() {}
                 specStarted() {}
@@ -141,14 +132,14 @@ describe('core/runner specs:', function () {
                 specs: 'path/to/specs'
             });
             expect(function () {
-                runnerInstance.addReporterStrategy(new SomeReporStrategy());
-            }).toThrow('SomeReporStrategy specification must implement a method "specDone".');
+                runnerInstance.addReporterStrategy(new SomeReportStrategy());
+            }).toThrow('SomeReportStrategy specification must implement a method "specDone".');
 
         });
 
         it('addReporterStrategy should throw an exception if a specification of a report strategy not implement a method "suiteDone".', function () {
 
-            class SomeReporStrategy {
+            class SomeReportStrategy {
                 started() {}
                 suiteStarted() {}
                 specStarted() {}
@@ -159,14 +150,14 @@ describe('core/runner specs:', function () {
                 specs: 'path/to/specs'
             });
             expect(function () {
-                runnerInstance.addReporterStrategy(new SomeReporStrategy());
-            }).toThrow('SomeReporStrategy specification must implement a method "suiteDone".');
+                runnerInstance.addReporterStrategy(new SomeReportStrategy());
+            }).toThrow('SomeReportStrategy specification must implement a method "suiteDone".');
 
         });
 
         it('addReporterStrategy should throw an exception if a specification of a report strategy not implement a method "done".', function () {
 
-            class SomeReporStrategy {
+            class SomeReportStrategy {
                 started() {}
                 suiteStarted() {}
                 specStarted() {}
@@ -177,14 +168,127 @@ describe('core/runner specs:', function () {
                 specs: 'path/to/specs'
             });
             expect(function () {
-                runnerInstance.addReporterStrategy(new SomeReporStrategy());
-            }).toThrow('SomeReporStrategy specification must implement a method "done".');
+                runnerInstance.addReporterStrategy(new SomeReportStrategy());
+            }).toThrow('SomeReportStrategy specification must implement a method "done".');
 
         });
+
+        it('runPathHelpers should reject if a first argument is not an instance of Composite.', function (done) {
+
+            Runner.runPathHelpers({}, 'beforeAll').catch(err => {
+                expect(err.message).toBe('A first argument must be an instance of Composite.');
+                done();
+            });
+
+        });
+
+        it('runPathHelpers should reject if a second argument is not a string.', function (done) {
+
+            Runner.runPathHelpers(new Composite(), 1).catch(err => {
+                expect(err.message).toBe('A second argument must be a string.');
+                done();
+            });
+
+        });
+
+        it('scan should reject if config is not correct', function(done) {
+
+            let runnerInstance = new Runner({});
+            runnerInstance.scan().catch(err => {
+                expect(err.message).toBe('A first argument must be a string.');
+                done();
+            });
+
+        });
+
+        it('findBuilder should throw an exception if builder is not specified.', function() {
+
+            let runnerInstance = new Runner({});
+            let fileInstance = new File('path/to/file');
+            expect(function() {
+                runnerInstance.findBuilder(fileInstance);
+            }).toThrow('Builder for path/to/file is not specified.');
+
+
+        });
+/*
+        it('should reject if a scanner return an error', function(done) {
+
+            let savedScanner = scanDirectory.scanner;
+            scanDirectory.scanner = function(path, opts, cb) {
+                setTimeout(() => cb(new Error('Some error'), null), 10);
+            };
+
+            scanDirectory('tests/mocks/scan-dir/!**!/!*.json').catch(err => {
+                expect(err instanceof Error).toBe(true);
+                expect(err.message).toBe('Some error');
+                done();
+            });
+
+            scanDirectory.scanner = savedScanner;
+        });
+
+        it('should reject if a first argument is not a string.', function(done) {
+
+            scanDirectory(null).catch(err => {
+                expect(err instanceof TypeError).toBe(true);
+                expect(err.message).toBe('A first argument must be a string.');
+                done();
+            });
+
+        });
+*/
 
     });
 
     describe('working specs:', function () {
+
+        it('scan should resolve txt files.', function(done) {
+
+            let runnerInstance = new Runner({
+                specs: 'tests/mocks/scan-dir/**/*.txt'
+            });
+            runnerInstance.scan().then(() => {
+                let files = [];
+                for (let file of runnerInstance.specFiles) {
+                    files.push(file.path);
+                }
+                expect(files).toEqual([
+                    'tests/mocks/scan-dir/scan-dir-test1.txt',
+                    'tests/mocks/scan-dir/sub/scan-dir-test2.txt'
+                ]);
+                done();
+            });
+
+        });
+
+        it('findBuilder should find one builder.', function() {
+
+            class FirstBuildStrategy {
+                test(fileInstance) {
+                    let re = /\.txt$/;
+                    return re.test(fileInstance.path);
+                }
+                build() {}
+            }
+            class SecondBuildStrategy {
+                test(fileInstance) {
+                    let re = /\.js$/;
+                    return re.test(fileInstance.path);
+                }
+                build() {}
+            }
+            let runnerInstance = new Runner({
+                specs: 'path/to/specs'
+            });
+            let firstBuildStrategyInstance = new FirstBuildStrategy();
+            let secondBuildStrategyInstance = new SecondBuildStrategy();
+            runnerInstance.addBuilderStrategy(firstBuildStrategyInstance);
+            runnerInstance.addBuilderStrategy(secondBuildStrategyInstance);
+            let builder = runnerInstance.findBuilder(new File('path/to/specs/spec.js'));
+            expect(builder.strategy).toBe(secondBuildStrategyInstance);
+
+        });
 
     });
 

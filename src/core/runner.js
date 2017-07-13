@@ -1,19 +1,19 @@
 import Builder from './builder';
-import Reporter from './reporter';
-import Suite from './suite';
+import Reporter, {reporterMethodsList} from './reporter';
+import Suite, {supportedHelpersList} from './suite';
 import Spec from './spec';
 import File from './file';
 import Collection from './collection';
+import Composite from './composite';
 import {scanDirectory} from '../utils/scan-directory';
-import {checkArgumentType} from '../utils/check-type';
-import statusable from '../decorators/statusable';
+import {checkArgumentType, isFunction} from '../utils/check-type';
+import {checkArgumentInstance} from '../utils/check-instance';
 
 /**
  * Tests runner
  * @class Runner
  * @public
  */
-@statusable('status', ['pending', 'fail', 'success'])
 export default class Runner {
 
     /**
@@ -27,6 +27,8 @@ export default class Runner {
         this.builders = new Collection(Builder);
         this.reporters = new Collection(Reporter);
         this.specFiles = new Collection(File);
+        this.contextMap = new Map();
+        this.failsMap = new Map();
     }
 
     /**
@@ -59,7 +61,7 @@ export default class Runner {
      */
     async scan() {
         let specFiles = await scanDirectory(this.config.specs);
-        specFiles.forEach(specPath => this.specFiles.addChild(new File(specPath)));
+        specFiles.forEach(specPath => this.specFiles.addItem(new File(specPath)));
     }
 
     /**
@@ -69,26 +71,136 @@ export default class Runner {
      * @return {Promise.<void>}
      */
     async run() {
-        for (let fileInstance of specFiles) {
-            for (let builder of this.builders) {
-                if (builder.test(fileInstance)) {
-                    let compositeInstance = await builder.build(fileInstance);
-                    // let currentSuite;
-                    // let currentSpec;
-                    await compositeInstance.traverse(currentCompositeInstance => {
-                        if (currentCompositeInstance instanceof Suite) {
-                            // @TODO implement
-                        }
-                        if (currentCompositeInstance instanceof Spec) {
-                            // @TODO implement
-                        }
-                    }, currentCompositeInstance => {
-                        // @TODO implement
-                    });
+        this.report('started');
+        for (let fileInstance of this.specFiles) {
+            let builder = this.findBuilder(fileInstance);
+            let compositeInstance = await builder.build(fileInstance);
+            let execute = this.makeBranchStartedHandler();
+            let done = this.makeBranchDoneHandler();
+            await compositeInstance.traverse(execute, done);
+        }
+        this.report('done');
+    }
+
+    /**
+     * Find builder for fileInstance
+     * @method findBuilder
+     * @param {File} fileInstance - an instance of File
+     * @return {Builder}
+     * @throws {Error}
+     */
+    findBuilder(fileInstance) {
+        for (let builder of this.builders) {
+            if (builder.test(fileInstance)) {
+                return builder;
+            }
+        }
+        throw new Error('Builder for ' + fileInstance.path + ' is not specified.');
+    }
+
+    /**
+     * Make handler to run when branch is started
+     * @method makeBranchStartedHandler
+     * @return {function(Composite)}
+     */
+    makeBranchStartedHandler() {
+        /**
+         * Run to execute current Composite instance
+         * @param {Composite} currentCompositeInstance - an instance of Composite
+         * @return {Promise.<void>}
+         */
+        return async currentCompositeInstance => {
+            let context = {};
+            this.contextMap.set(currentCompositeInstance, context);
+            if (currentCompositeInstance instanceof Suite) {
+                await this.constructor.runPathHelpers(currentCompositeInstance, 'beforeAll');
+                this.report('suiteStarted', currentCompositeInstance);
+            }
+            if (currentCompositeInstance instanceof Spec) {
+                await this.constructor.runPathHelpers(currentCompositeInstance, 'beforeEach');
+                this.report('specStarted', currentCompositeInstance);
+                try {
+                    await currentCompositeInstance.run(context);
+                } catch(err) {
+                    this.failsMap(currentCompositeInstance, 'fail', err.message);
+                }
+            }
+        };
+    }
+
+    /**
+     * Make handler to run when branch is complete
+     * @method makeBranchDoneHandler
+     * @return {function(Composite)}
+     */
+    makeBranchDoneHandler() {
+        /**
+         * Run when branch is complete
+         * @function makeBranchDoneHandler
+         * @param {Composite} currentCompositeInstance - an instance of Composite
+         */
+        return async currentCompositeInstance => {
+            if (currentCompositeInstance instanceof Suite) {
+                this.report('suiteDone', currentCompositeInstance);
+                await this.constructor.runPathHelpers(currentCompositeInstance, 'afterAll');
+            }
+            if (currentCompositeInstance instanceof Spec) {
+                this.report('specDone', currentCompositeInstance);
+                await this.constructor.runPathHelpers(currentCompositeInstance, 'afterEach');
+            }
+        };
+    }
+
+    /**
+     * Call method for each reporter
+     * @method report
+     * @param {string} method - method that should be called
+     * @param {Composite|null} compositeInstance - an instance of Composite
+     * @throws {TypeError}
+     * @throws {Error}
+     */
+    report(method, compositeInstance = null) {
+        checkArgumentType(method, 'string', 'first');
+        if (!isFunction(reporterMethodsList[method])) {
+            throw new Error('Method ' + method + ' is not supported.');
+        }
+        if (compositeInstance) {
+            checkArgumentInstance(compositeInstance, Composite, 'second');
+        }
+        let args = [compositeInstance];
+        if (method === 'specDone') {
+            let fail = this.failsMap.get(compositeInstance);
+            args.push(fail ? 'fail' : 'success');
+            args.push(fail || '');
+        }
+        for (let reporterInstance of this.reporters) {
+            reporterInstance[method].apply(reporterInstance, args);
+        }
+    }
+
+    /**
+     * Run all helpers with name helperName in path of Composite instance
+     * async function
+     * @method runPathHelpers
+     * @param {Composite} currentCompositeInstance - an instance of Composite
+     * @param {String} helperName - can be beforeAll, beforeEach, afterEach or afterAll
+     * @return {Promise.<void>}
+     * @static
+     */
+    static async runPathHelpers(currentCompositeInstance, helperName) {
+        checkArgumentInstance(currentCompositeInstance, Composite, 'first');
+        checkArgumentType(helperName, 'string', 'second');
+        if (!(helperName in supportedHelpersList)) {
+            throw new Error('Helper ' + helperName + ' is not supported.');
+        }
+        let context = this.contextMap.get(currentCompositeInstance);
+        for (let pathItem of currentCompositeInstance.path) {
+            if (pathItem instanceof Suite) {
+                for (let helper of pathItem[helperName + 'List']) {
+                    await helper.call(context);
                 }
             }
         }
     }
-
 
 }

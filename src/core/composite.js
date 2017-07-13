@@ -14,7 +14,6 @@ export default class Composite {
      */
     constructor() {
         this.path = new Collection(Composite);
-        this.parent = null;
         this.children = new Collection(Composite);
     }
 
@@ -26,7 +25,6 @@ export default class Composite {
      */
     addChild(child) {
         this.children.addItem(child);
-        child.parent = this;
         child.path = this.path.clone();
         child.path.addItem(child);
     }

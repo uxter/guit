@@ -24,10 +24,12 @@ export default class Spec extends Composite {
 
     /**
      * Run test specification executor
+     * async function
      * @method run
      */
-    run() {
-        this.executor();
+    async run(context) {
+        checkArgumentType(context, 'object', 'first');
+        await this.executor.apply(context);
     }
 
 }

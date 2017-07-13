@@ -1,7 +1,32 @@
 import {checkArgumentInstance} from '../utils/check-instance';
+import {checkArgumentType} from '../utils/check-type';
 import {checkClassSpec} from '../utils/check-class-spec';
 import Suite from './suite';
 import Spec from './spec';
+
+/**
+ * Reporter methods list
+ * @type {Array.<string>}
+ * @public
+ */
+export const reporterMethodsList = [
+    'started',
+    'suiteStarted',
+    'specStarted',
+    'specDone',
+    'suiteDone',
+    'done'
+];
+
+/**
+ * Supported statuses list
+ * @type {Array.<string>}
+ * @private
+ */
+const supportedStatusesList = [
+    'fail',
+    'success'
+];
 
 /**
  * A reporter
@@ -16,14 +41,7 @@ export default class Reporter {
      * @throws {TypeError}
      */
     constructor(strategy) {
-        checkClassSpec(strategy, [
-            'started',
-            'suiteStarted',
-            'specStarted',
-            'specDone',
-            'suiteDone',
-            'done'
-        ]);
+        checkClassSpec(strategy, reporterMethodsList);
         this.strategy = strategy;
     }
 
@@ -61,11 +79,18 @@ export default class Reporter {
      * Call when Spec is done
      * @method specDone
      * @param {Spec} specInstance
+     * @param {string} status - must be fail or success
+     * @param {string} failMessage - must be a string
      * @throws {TypeError}
      */
-    specDone(specInstance) {
+    specDone(specInstance, status, failMessage) {
         checkArgumentInstance(specInstance, Spec, 'first');
-        this.strategy.specDone(specInstance);
+        checkArgumentType(status, 'string', 'second');
+        if (supportedStatusesList.indexOf(status) === -1) {
+            throw new Error('Status ' + status + ' is not supported.');
+        }
+        checkArgumentType(failMessage, 'string', 'third');
+        this.strategy.specDone(specInstance, status, failMessage);
     }
 
     /**

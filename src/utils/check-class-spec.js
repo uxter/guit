@@ -4,7 +4,7 @@ import {checkArgumentType, isString, isFunction} from './check-type';
  * Check class specification (methods list)
  * @function checkClassSpec
  * @param {object} instance - an instance of a class whose a specification should be checked
- * @param {array.<string>} methods - a list of method names
+ * @param {Array.<string>} methods - a list of method names
  * @throws {TypeError}
  * @public
  */

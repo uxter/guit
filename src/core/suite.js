@@ -3,6 +3,18 @@ import Composite from './composite';
 import Collection from './collection';
 
 /**
+ * Supported helpers list
+ * @type {Array.<string>}
+ * @public
+ */
+export const supportedHelpersList = [
+    'beforeAll',
+    'beforeEach',
+    'afterEach',
+    'afterAll'
+];
+
+/**
  * A container that has a set of tests.
  * (Composite)
  * @class Suite

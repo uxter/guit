@@ -1,5 +1,4 @@
 import {checkArgumentType} from '../utils/check-type';
-import statusable from '../decorators/statusable';
 import fs from 'fs';
 
 /**
@@ -7,7 +6,6 @@ import fs from 'fs';
  * @class File
  * @public
  */
-@statusable('status', ['fail', 'success'])
 export default class File {
 
     /**

@@ -13,15 +13,6 @@ describe('core/file specs:', function () {
 
         });
 
-        it('setStatus should throw an exception if a status is not supported.', function () {
-
-            let fileInstance = new File('path/to/file');
-            expect(function () {
-                fileInstance.setStatus('pending');
-            }).toThrow('Status pending is not supported.');
-
-        });
-
         it('read should throw an exception if a file is not exists.', function (done) {
 
             let fileInstance = new File('path/to/file');
@@ -35,17 +26,6 @@ describe('core/file specs:', function () {
     });
 
     describe('working specs:', function () {
-
-        it('should set and get status.', function () {
-
-            let fileInstance = new File('path/to/file');
-            expect(fileInstance.getStatus()).toBe('initial');
-            fileInstance.setStatus('success');
-            expect(fileInstance.getStatus()).toBe('success');
-            fileInstance.setStatus('fail');
-            expect(fileInstance.getStatus()).toBe('fail');
-
-        });
 
         it('read should return file content.', function (done) {
 
