@@ -6,7 +6,7 @@ import File from './file';
 import Collection from './collection';
 import Composite from './composite';
 import {scanDirectory} from '../utils/scan-directory';
-import {checkArgumentType} from '../utils/check-type';
+import {checkArgumentType, isString} from '../utils/check-type';
 import {checkArgumentInstance} from '../utils/check-instance';
 
 /**
@@ -28,6 +28,7 @@ export default class Runner {
         this.reporters = new Collection(Reporter);
         this.specFiles = new Collection(File);
         this.contextMap = new Map();
+        this.eachContextMap = new Map();
         this.failsMap = new Map();
     }
 
@@ -113,17 +114,22 @@ export default class Runner {
             let context = {...(this.contextMap.get(currentCompositeInstance.parent) || {})};
             this.contextMap.set(currentCompositeInstance, context);
             if (currentCompositeInstance instanceof Suite) {
-                await this.runPathHelpers(currentCompositeInstance, 'beforeAll');
+                await this.runHelpers(currentCompositeInstance, 'beforeAll');
                 this.report('suiteStarted', currentCompositeInstance);
             }
             if (currentCompositeInstance instanceof Spec) {
                 await this.runPathHelpers(currentCompositeInstance, 'beforeEach');
                 this.report('specStarted', currentCompositeInstance);
+                context = {
+                    ...this.eachContextMap.get(currentCompositeInstance),
+                    ...context
+                };
                 try {
                     await currentCompositeInstance.run(context);
                 } catch(err) {
-                    this.failsMap(currentCompositeInstance, 'fail', err.message);
+                    this.failsMap.set(currentCompositeInstance, err.message);
                 }
+                this.contextMap.set(currentCompositeInstance, context);
             }
         };
     }
@@ -142,12 +148,14 @@ export default class Runner {
         return async currentCompositeInstance => {
             if (currentCompositeInstance instanceof Suite) {
                 this.report('suiteDone', currentCompositeInstance);
-                await this.runPathHelpers(currentCompositeInstance, 'afterAll');
+                await this.runHelpers(currentCompositeInstance, 'afterAll');
             }
             if (currentCompositeInstance instanceof Spec) {
                 this.report('specDone', currentCompositeInstance);
                 await this.runPathHelpers(currentCompositeInstance, 'afterEach');
             }
+            this.contextMap.delete(currentCompositeInstance);
+            this.eachContextMap.delete(currentCompositeInstance);
         };
     }
 
@@ -170,11 +178,31 @@ export default class Runner {
         let args = [compositeInstance];
         if (method === 'specDone') {
             let fail = this.failsMap.get(compositeInstance);
-            args.push(fail ? 'fail' : 'success');
+            args.push(isString(fail) ? 'fail' : 'success');
             args.push(fail || '');
         }
         for (let reporterInstance of this.reporters) {
             reporterInstance[method].apply(reporterInstance, args);
+        }
+    }
+
+    /**
+     * Run all helpers with name helperName in path of Composite instance
+     * async function
+     * @method runHelpers
+     * @param {Composite} currentCompositeInstance - an instance of Composite
+     * @param {String} helperName - can be beforeAll, beforeEach, afterEach or afterAll
+     * @return {Promise.<void>}
+     */
+    async runHelpers(currentCompositeInstance, helperName) {
+        checkArgumentInstance(currentCompositeInstance, Composite, 'first');
+        checkArgumentType(helperName, 'string', 'second');
+        if (supportedHelpersList.indexOf(helperName) === -1) {
+            throw new Error('Helper ' + helperName + ' is not supported.');
+        }
+        let context = this.contextMap.get(currentCompositeInstance);
+        for (let helper of currentCompositeInstance[helperName + 'List']) {
+            await helper.call(context);
         }
     }
 
@@ -192,23 +220,23 @@ export default class Runner {
         if (supportedHelpersList.indexOf(helperName) === -1) {
             throw new Error('Helper ' + helperName + ' is not supported.');
         }
-        let context = this.contextMap.get(currentCompositeInstance);
-        let pathItemsList = [];
-        for (let pathItem of currentCompositeInstance.path) {
-            pathItemsList.push(pathItem);
-        }
+        let eachContext = {};
         if (helperName.indexOf('after') === 0) {
-            pathItemsList.reverse();
-            if (helperName === 'afterAll') {
-                pathItemsList.unshift(pathItemsList.pop());
-            }
+            eachContext = {...this.contextMap.get(currentCompositeInstance)};
         }
-        for (let pathItem of pathItemsList) {
+        for (let pathItem of currentCompositeInstance.path) {
             if (pathItem instanceof Suite) {
+                eachContext = {
+                    ...eachContext,
+                    ...this.contextMap.get(pathItem)
+                };
                 for (let helper of pathItem[helperName + 'List']) {
-                    await helper.call(context);
+                    await helper.call(eachContext);
                 }
             }
+        }
+        if (helperName.indexOf('before') === 0) {
+            this.eachContextMap.set(currentCompositeInstance, eachContext);
         }
     }
 
