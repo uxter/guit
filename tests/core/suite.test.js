@@ -13,14 +13,6 @@ describe('core/suite specs:', function () {
 
         });
 
-        it('constructor should throw an exception if a second argument is not a function.', function () {
-
-            expect(function () {
-                new Suite('Some specs:', 2);
-            }).toThrow('A second argument must be a function.');
-
-        });
-
         it('addBeforeAllHelper should throw an exception if a first argument is not a function.', function () {
 
             let suiteInstance = new Suite('Some specs:', function() {});
@@ -94,17 +86,6 @@ describe('core/suite specs:', function () {
             let helper = function() {};
             suiteInstance.addAfterEachHelper(helper);
             expect(suiteInstance.afterEachList.getItem(0)).toBe(helper);
-
-        });
-
-        it('create should run creator.', function () {
-
-            let isExecuted = false;
-            let suiteInstance = new Suite('Parent specs:', function() {
-                isExecuted = true;
-            });
-            suiteInstance.create();
-            expect(isExecuted).toBe(true);
 
         });
 

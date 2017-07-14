@@ -28,16 +28,14 @@ export default class Suite extends Composite {
      * @param {function} creator - A test suite creator
      * @throws {TypeError}
      */
-    constructor(title, creator) {
+    constructor(title) {
         checkArgumentType(title, 'string', 'first');
-        checkArgumentType(creator, 'function', 'second');
         super();
         this.title = title;
         this.beforeAllList = new Collection('function');
         this.beforeEachList = new Collection('function');
         this.afterEachList = new Collection('function');
         this.afterAllList = new Collection('function');
-        this.creator = creator;
     }
 
     /**
@@ -78,14 +76,6 @@ export default class Suite extends Composite {
      */
     addAfterAllHelper(helper) {
         this.afterAllList.addItem(helper);
-    }
-
-    /**
-     * Run suite creator
-     * @method create
-     */
-    create() {
-        this.creator();
     }
 
 }

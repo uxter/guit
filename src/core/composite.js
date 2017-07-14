@@ -14,7 +14,9 @@ export default class Composite {
      */
     constructor() {
         this.path = new Collection(Composite);
+        this.path.addItem(this);
         this.children = new Collection(Composite);
+        this.parent = null;
     }
 
     /**
@@ -27,6 +29,7 @@ export default class Composite {
         this.children.addItem(child);
         child.path = this.path.clone();
         child.path.addItem(child);
+        child.parent = this;
     }
 
     /**

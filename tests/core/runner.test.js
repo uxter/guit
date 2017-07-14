@@ -175,7 +175,10 @@ describe('core/runner specs:', function () {
 
         it('runPathHelpers should reject if a first argument is not an instance of Composite.', function (done) {
 
-            Runner.runPathHelpers({}, 'beforeAll').catch(err => {
+            let runnerInstance = new Runner({
+                specs: 'path/to/specs'
+            });
+            runnerInstance.runPathHelpers({}, 'beforeAll').catch(err => {
                 expect(err.message).toBe('A first argument must be an instance of Composite.');
                 done();
             });
@@ -184,8 +187,23 @@ describe('core/runner specs:', function () {
 
         it('runPathHelpers should reject if a second argument is not a string.', function (done) {
 
-            Runner.runPathHelpers(new Composite(), 1).catch(err => {
+            let runnerInstance = new Runner({
+                specs: 'path/to/specs'
+            });
+            runnerInstance.runPathHelpers(new Composite(), 1).catch(err => {
                 expect(err.message).toBe('A second argument must be a string.');
+                done();
+            });
+
+        });
+
+        it('runPathHelpers should reject if method is not supported.', function (done) {
+
+            let runnerInstance = new Runner({
+                specs: 'path/to/specs'
+            });
+            runnerInstance.runPathHelpers(new Composite(), 'unsupportedMethod').catch(err => {
+                expect(err.message).toBe('Helper unsupportedMethod is not supported.');
                 done();
             });
 
@@ -211,39 +229,39 @@ describe('core/runner specs:', function () {
 
 
         });
-/*
-        it('should reject if a scanner return an error', function(done) {
 
-            let savedScanner = scanDirectory.scanner;
-            scanDirectory.scanner = function(path, opts, cb) {
-                setTimeout(() => cb(new Error('Some error'), null), 10);
-            };
+        it('report should throw an exception if a first argument is not a string.', function() {
 
-            scanDirectory('tests/mocks/scan-dir/!**!/!*.json').catch(err => {
-                expect(err instanceof Error).toBe(true);
-                expect(err.message).toBe('Some error');
-                done();
-            });
-
-            scanDirectory.scanner = savedScanner;
-        });
-
-        it('should reject if a first argument is not a string.', function(done) {
-
-            scanDirectory(null).catch(err => {
-                expect(err instanceof TypeError).toBe(true);
-                expect(err.message).toBe('A first argument must be a string.');
-                done();
-            });
+            let runnerInstance = new Runner({});
+            expect(function() {
+                runnerInstance.report(1, new Composite());
+            }).toThrow('A first argument must be a string.');
 
         });
-*/
+
+        it('report should throw an exception if a method is not supported.', function() {
+
+            let runnerInstance = new Runner({});
+            expect(function() {
+                runnerInstance.report('unsupportedMethod', new Composite());
+            }).toThrow('Method unsupportedMethod is not supported.');
+
+        });
+
+        it('report should throw an exception if a second argument is not Composite instance or not null.', function() {
+
+            let runnerInstance = new Runner({});
+            expect(function() {
+                runnerInstance.report('started', {});
+            }).toThrow('A second argument must be an instance of Composite or null.');
+
+        });
 
     });
 
     describe('working specs:', function () {
 
-        it('scan should resolve txt files.', function(done) {
+        it('scan should resolve txt files.', function (done) {
 
             let runnerInstance = new Runner({
                 specs: 'tests/mocks/scan-dir/**/*.txt'
@@ -262,14 +280,16 @@ describe('core/runner specs:', function () {
 
         });
 
-        it('findBuilder should find one builder.', function() {
+        it('findBuilder should find one builder.', function () {
 
             class FirstBuildStrategy {
                 test(fileInstance) {
                     let re = /\.txt$/;
                     return re.test(fileInstance.path);
                 }
-                build() {}
+
+                build() {
+                }
             }
             class SecondBuildStrategy {
                 test(fileInstance) {

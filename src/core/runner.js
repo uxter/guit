@@ -6,7 +6,7 @@ import File from './file';
 import Collection from './collection';
 import Composite from './composite';
 import {scanDirectory} from '../utils/scan-directory';
-import {checkArgumentType, isFunction} from '../utils/check-type';
+import {checkArgumentType} from '../utils/check-type';
 import {checkArgumentInstance} from '../utils/check-instance';
 
 /**
@@ -110,14 +110,14 @@ export default class Runner {
          * @return {Promise.<void>}
          */
         return async currentCompositeInstance => {
-            let context = {};
+            let context = {...(this.contextMap.get(currentCompositeInstance.parent) || {})};
             this.contextMap.set(currentCompositeInstance, context);
             if (currentCompositeInstance instanceof Suite) {
-                await this.constructor.runPathHelpers(currentCompositeInstance, 'beforeAll');
+                await this.runPathHelpers(currentCompositeInstance, 'beforeAll');
                 this.report('suiteStarted', currentCompositeInstance);
             }
             if (currentCompositeInstance instanceof Spec) {
-                await this.constructor.runPathHelpers(currentCompositeInstance, 'beforeEach');
+                await this.runPathHelpers(currentCompositeInstance, 'beforeEach');
                 this.report('specStarted', currentCompositeInstance);
                 try {
                     await currentCompositeInstance.run(context);
@@ -142,11 +142,11 @@ export default class Runner {
         return async currentCompositeInstance => {
             if (currentCompositeInstance instanceof Suite) {
                 this.report('suiteDone', currentCompositeInstance);
-                await this.constructor.runPathHelpers(currentCompositeInstance, 'afterAll');
+                await this.runPathHelpers(currentCompositeInstance, 'afterAll');
             }
             if (currentCompositeInstance instanceof Spec) {
                 this.report('specDone', currentCompositeInstance);
-                await this.constructor.runPathHelpers(currentCompositeInstance, 'afterEach');
+                await this.runPathHelpers(currentCompositeInstance, 'afterEach');
             }
         };
     }
@@ -161,11 +161,11 @@ export default class Runner {
      */
     report(method, compositeInstance = null) {
         checkArgumentType(method, 'string', 'first');
-        if (!isFunction(reporterMethodsList[method])) {
+        if (reporterMethodsList.indexOf(method) === -1) {
             throw new Error('Method ' + method + ' is not supported.');
         }
-        if (compositeInstance) {
-            checkArgumentInstance(compositeInstance, Composite, 'second');
+        if (compositeInstance && !(compositeInstance instanceof Composite)) {
+            throw new TypeError('A second argument must be an instance of Composite or null.');
         }
         let args = [compositeInstance];
         if (method === 'specDone') {
@@ -185,16 +185,25 @@ export default class Runner {
      * @param {Composite} currentCompositeInstance - an instance of Composite
      * @param {String} helperName - can be beforeAll, beforeEach, afterEach or afterAll
      * @return {Promise.<void>}
-     * @static
      */
-    static async runPathHelpers(currentCompositeInstance, helperName) {
+    async runPathHelpers(currentCompositeInstance, helperName) {
         checkArgumentInstance(currentCompositeInstance, Composite, 'first');
         checkArgumentType(helperName, 'string', 'second');
-        if (!(helperName in supportedHelpersList)) {
+        if (supportedHelpersList.indexOf(helperName) === -1) {
             throw new Error('Helper ' + helperName + ' is not supported.');
         }
         let context = this.contextMap.get(currentCompositeInstance);
+        let pathItemsList = [];
         for (let pathItem of currentCompositeInstance.path) {
+            pathItemsList.push(pathItem);
+        }
+        if (helperName.indexOf('after') === 0) {
+            pathItemsList.reverse();
+            if (helperName === 'afterAll') {
+                pathItemsList.unshift(pathItemsList.pop());
+            }
+        }
+        for (let pathItem of pathItemsList) {
             if (pathItem instanceof Suite) {
                 for (let helper of pathItem[helperName + 'List']) {
                     await helper.call(context);
