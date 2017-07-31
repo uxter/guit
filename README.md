@@ -1,8 +1,8 @@
-# :hammer: At the moment, there is development of [the new major 2 version](https://github.com/shcoder-ru/guit/tree/v2). [![Build Status](https://travis-ci.org/shcoder-ru/guit.svg?branch=v2)](https://travis-ci.org/shcoder-ru/guit) [![Coverage Status](https://codecov.io/gh/shcoder-ru/guit/branch/v2/graph/badge.svg)](https://codecov.io/gh/shcoder-ru/guit) [![Dependency Status](https://david-dm.org/shcoder-ru/guit.svg)](https://david-dm.org/shcoder-ru/guit) [![Join the chat at https://gitter.im/es-guit](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/es-guit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# :hammer: At the moment, there is development of [the new major 2 version](https://github.com/uxter/guit/tree/v2). [![Build Status](https://travis-ci.org/uxter/guit.svg?branch=v2)](https://travis-ci.org/uxter/guit) [![Coverage Status](https://codecov.io/gh/uxter/guit/branch/v2/graph/badge.svg)](https://codecov.io/gh/uxter/guit) [![Dependency Status](https://david-dm.org/uxter/guit.svg)](https://david-dm.org/uxter/guit) [![Join the chat at https://gitter.im/es-guit](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/es-guit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 -----
 
-[![GUIT](https://rawgithub.com/shcoder-ru/guit/master/images/guit-logo.png)](https://github.com/shcoder-ru/guit)
+[![GUIT](https://rawgithub.com/uxter/guit/master/images/guit-logo.png)](https://github.com/uxter/guit)
 
 The JavaScript framework for testing web UI
 
