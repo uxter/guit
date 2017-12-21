@@ -2,7 +2,3 @@ node_modules
 .idea
 .editorconfig
 .gitignore
-.travis.yml
-README.hbs
-.nyc_output
-coverage
